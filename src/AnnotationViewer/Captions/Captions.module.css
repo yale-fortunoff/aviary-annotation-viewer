@@ -1,7 +1,76 @@
-.Captions {
+.CaptionsContainer {
   height: 100%;
+  position: relative;
 }
 
 .Caption {
+  font-family: Arial, Helvetica, sans-serif;
   margin-bottom: 22px;
+  display: flex;
+
+  padding: 14px;
+  border-radius: 2px;
+}
+
+.Caption p:first-child {
+  margin-top: 0;
+}
+
+.CaptionColumn {
+  max-width: 600px;
+  margin-right: auto;
+  margin-left: auto;
+  padding-top: 60px;
+}
+
+.CaptionLabel {
+  margin-right: 1em;
+  font-weight: 600;
+}
+
+.Active {
+  background-color: inherit;
+}
+
+.ActiveFootnote {
+  transition: background-color 1s;
+}
+
+.InactiveFootnote {
+  border: none;
+}
+
+.SynchButtonContainer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding-left: 13px;
+  padding-bottom: 13px;
+}
+
+@media screen and (max-width: 600px) {
+  .SynchButtonContainer {
+    left: 0;
+    right: 0;
+    padding-left: unset;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.SynchButton {
+  background-color: teal;
+  color: white;
+  border-radius: 4px;
+  padding: 8px 16px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+
+  box-shadow: 0px 0px 10px gray;
+}
+
+.SynchButton:hover {
+  cursor: pointer;
+  background-color: rgb(230, 108, 61);
 }

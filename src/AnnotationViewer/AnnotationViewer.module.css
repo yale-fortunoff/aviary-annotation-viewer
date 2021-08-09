@@ -4,15 +4,15 @@
   display: flex;
   flex-direction: column;
 
-  background-color: green;
+  /* background-color: green; */
 }
 
 .Header {
-  background-color: orange;
+  /* background-color: orange; */
 }
 
 .Footer {
-  background-color: orchid;
+  /* background-colsor: orchid; */
 }
 
 .Main {
@@ -25,19 +25,53 @@
 
 .PlayerContainer {
   flex-grow: 0;
-  flex-shrink: 0;
-  flex-basis: 50%;
+  flex-shrink: 1;
   overflow: hidden;
   background-color: blue;
   color: white;
+  transition: flex-basis 750ms ease-out;
+}
+
+.PlayerContainer.size-medium {
+  flex-basis: 50%;
+}
+.PlayerContainer.size-small {
+  flex-basis: 33%;
 }
 
 .CaptionsContainer {
-  flex-grow: 0;
-  flex-shrink: 0;
+  flex-grow: 1;
+  flex-shrink: 1;
   flex-basis: 50%;
-  background-color: red;
-  color: white;
+  /* background-color: #efefef; */
+  color: #222;
 
   overflow: scroll;
+}
+
+.Constrained {
+  width: 100%;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.Wide {
+  /* padding: 0 80px; */
+}
+
+.Gray {
+  background-color: #efefef;
+}
+
+.ControlbarContainer {
+  background-color: white;
+}
+
+.VideoTitle {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  /* background-color: white; */
+  margin: 14px;
+  margin-left: 60px;
 }

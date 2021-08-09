@@ -14,5 +14,15 @@
 
   height: 100%;
   width: 100%;
-  background-color: gray;
+  background-color: black;
+}
+
+.CaptionContainer {
+  position: relative;
+}
+
+/* eventually hide cues so we can display text in custom box */
+::cue {
+  /* visibility: hidden; */
+  visibility: visible;
 }
