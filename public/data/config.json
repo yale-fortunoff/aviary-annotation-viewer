@@ -1,0 +1,36 @@
+{
+    "videos": [
+        {
+            "slug": "hvt-2033",
+            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/vm42r3p97p/manifest"
+        },
+        {
+            "slug": "hvt-0170",
+            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/tq5r785x0b/manifest"
+        },
+        {
+            "slug": "hvt-3280",
+            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/028pc2t54f/manifest"
+        },
+        {
+            "slug": "hvt-3038",
+            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/p26pz51s4w/manifest"
+        },
+        {
+            "slug": "hvt-0764",
+            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/cr5n87319n/manifest"
+        },
+        {
+            "slug": "hvt-0237",
+            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/tq5r785x4k/manifest"
+        },
+        {
+            "slug": "hvt-3169",
+            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/jw86h4d01m/manifest"
+        },
+        {
+            "slug": "hvt-3164",
+            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/5x2599z44f/manifest"
+        }
+    ]
+}
