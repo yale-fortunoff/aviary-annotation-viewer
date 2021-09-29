@@ -5,9 +5,7 @@ import ControlBar from "./ControlBar/index";
 import { useEffect, useState } from "react";
 import {
   getVideoParts,
-  getVideoPartTitle,
   getVideoPartURL,
-  getVideoPartWebVTTURL,
   getVideoTitleFromManifest,
 } from "../api";
 import { IManifest, IVideoPart } from "../api/iiifManifest";

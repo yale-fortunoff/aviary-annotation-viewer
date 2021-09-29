@@ -13,7 +13,6 @@ interface ControlBarProps {
 
 function ControlBar(props: ControlBarProps) {
   const {
-    currentPartNumber,
     setVideoPart,
     callNumber: hvtID,
     partList,

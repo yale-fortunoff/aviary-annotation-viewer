@@ -15,19 +15,19 @@ interface CaptionsProps {
   toggleSynch: () => void;
 }
 
-interface Caption {
-  text: string;
-  start: string;
-  end: string;
-}
+// interface Caption {
+//   text: string;
+//   start: string;
+//   end: string;
+// }
 
-interface Footnote extends Caption {
-  label: string;
-}
+// interface Footnote extends Caption {
+//   label: string;
+// }
 
-function Loading() {
-  return <div>LoAdInG...</div>;
-}
+// function Loading() {
+//   return <div>LoAdInG...</div>;
+// }
 
 function getFootnoteFromTime(seconds: number, captions: IVTT) {
   let ret = 0;
@@ -63,9 +63,8 @@ function Captions(props: CaptionsProps) {
 
   useEffect(() => {
     const newFootnoteIndex = getFootnoteFromTime(playerPosition, captions);
-    console.log("new footnote index", activeFootnoteIndex, newFootnoteIndex);
     setActiveFootnoteIndex(newFootnoteIndex);
-  }, [playerPosition, activeFootnoteIndex]);
+  }, [playerPosition, activeFootnoteIndex, captions]);
 
   useEffect(() => {
     if (synchronize && footnoteContainerRef.current) {

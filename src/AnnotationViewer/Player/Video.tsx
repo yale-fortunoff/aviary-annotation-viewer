@@ -1,9 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  getStartAndEndFromVTTItem,
-  getVideoPartVTTs,
-  getVTTCueFromIVTTItem,
-} from "../../api";
+import React, { useEffect, useRef } from "react";
+import { getVideoPartVTTs, getVTTCueFromIVTTItem } from "../../api";
 import { IVideoPart, IVTT, IVTTItem } from "../../api/iiifManifest";
 import styles from "./Video.module.css";
 
@@ -29,7 +25,7 @@ interface VideoProps {
 
 function Video(props: VideoProps) {
   const videoElement = useRef<HTMLVideoElement>(null);
-  const [currentText, setCurrentText] = useState<string>("");
+  // const [currentText, setCurrentText] = useState<string>("");
 
   const { videoPart } = props;
 
@@ -56,36 +52,35 @@ function Video(props: VideoProps) {
         console.log("Adding VTT track", VTT, track);
 
         VTT.items.forEach((cue: IVTTItem) => {
-          const { start, end } = getStartAndEndFromVTTItem(cue);
+          // const { start, end } = getStartAndEndFromVTTItem(cue);
           track?.addCue(getVTTCueFromIVTTItem(cue));
         });
       });
     })();
-  }, [videoElement]);
+  }, [videoElement, videoPart]);
 
+  // const handleCueChange = (evt) => {
+  //   if (!track.activeCues) {
+  //     return;
+  //   }
+  //   let text = "";
+  //   const cueCount = track.activeCues.length;
+  //   for (let i = 0; i < cueCount || 0; i++) {
+  //     const cue: TextTrackCue = track.activeCues[i];
+  //     const cueText = (cue as VTTCue).text;
+  //     console.log("track cue text", cueText);
+  //     text += ` ${cueText || ""}`;
+  //   }
+  //   // setCurrentText(text);
+  // };
   useEffect(() => {
     console.log("video text tracks", videoElement.current?.textTracks);
     const tracks = videoElement.current?.textTracks || [];
     for (let i = 0; i < tracks.length; i++) {
-      const track: TextTrack = tracks[i];
+      // const track: TextTrack = tracks[i];
 
       console.log("Track", tracks[i]);
-      track.oncuechange = (evt) => {
-        console.log("track cue change event", evt, track);
-        console.log("TextTrack activeCues", track.activeCues);
-        if (!track.activeCues) {
-          return;
-        }
-        let text = "";
-        const cueCount = track.activeCues.length;
-        for (let i = 0; i < cueCount || 0; i++) {
-          const cue: TextTrackCue = track.activeCues[i];
-          const cueText = (cue as VTTCue).text;
-          console.log("track cue text", cueText);
-          text += ` ${cueText || ""}`;
-        }
-        setCurrentText(text);
-      };
+      // track.oncuechange = handleCueChange;
     }
   }, [videoElement]);
 
@@ -101,7 +96,7 @@ function Video(props: VideoProps) {
             if (seconds === props.playerPosition) {
               return;
             }
-            console.log(`${seconds} seconds`);
+            // console.log(`${seconds} seconds`);
             props.setPlayerPosition(seconds);
           }}
           className={styles.Video}
