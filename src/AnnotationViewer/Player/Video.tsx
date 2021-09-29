@@ -121,7 +121,7 @@ function Video(props: VideoProps) {
             />
           ))} */}
         </video>
-        <div className={styles.CaptionContainer}>{currentText}</div>
+        {/* <div className={styles.CaptionContainer}>{currentText}</div> */}
       </div>
     </React.Fragment>
   );

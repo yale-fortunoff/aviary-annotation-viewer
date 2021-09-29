@@ -1,13 +1,6 @@
-import { IFootnoteItem, IManifest, IVideoPart, IVTT, IVTTItem } from "./iiifManifest"
+import { IManifest, IVideoPart, IVTT, IVTTItem } from "./iiifManifest"
+import { IConfig, IVideoConfigEntry } from "./interfaces"
 
-export interface IVideoConfigEntry {
-    slug: string;
-    manifestURL: string;
-    callNumber: string;
-}
-export interface IConfig {
-    videos: Array<IVideoConfigEntry>;
-}
 
 
 export function getVideoConfigFromSlug(config: IConfig, slug: string): IVideoConfigEntry | null {

@@ -7,7 +7,9 @@ import {
   Route,
   useParams,
 } from "react-router-dom";
-import { getVideoConfigFromSlug, IConfig } from "./api";
+import { getVideoConfigFromSlug } from "./api/";
+import IndexPage from "./AnnotationViewer/IndexPage";
+import { IConfig } from "./api/interfaces";
 
 interface AnnotationViewerFromSlugProps {
   config: IConfig;
@@ -52,7 +54,7 @@ function App() {
           <AnnotationViewerFromSlug config={config} />
         </Route>
         <Route path="/">
-          <div>Home page</div>
+          <IndexPage config={config} />
         </Route>
       </Switch>
     </Router>
