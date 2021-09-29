@@ -1,10 +1,14 @@
 import { useEffect, useRef, useState } from "react";
+import { getStartAndEndFromVTTItem, getVideoPartFootnotes } from "../../api";
+import { IVideoPart, IVTT, IVTTItem } from "../../api/iiifManifest";
 import styles from "./Captions.module.css";
 
 interface CaptionsProps {
   path: string;
   playerPosition: number;
   synchronize: boolean;
+
+  videoPart: IVideoPart;
 
   enableSynch: () => void;
   disableSynch: () => void;
@@ -25,55 +29,46 @@ function Loading() {
   return <div>LoAdInG...</div>;
 }
 
-function getTimeFromFootnote(caption: Caption) {
-  return Number(caption.start);
-}
-
-function getFootnoteFromTime(seconds: number, captions: Array<Caption>) {
+function getFootnoteFromTime(seconds: number, captions: IVTT) {
   let ret = 0;
-  for (let i = 0; i < captions.length; i++) {
-    const caption = captions[i];
+  for (let i = 0; i < captions.items.length; i++) {
+    const captionItem = captions.items[i];
+    const { start } = getStartAndEndFromVTTItem(captionItem);
 
-    if (Number(caption.start) >= seconds) {
-      console.log("found: ", i, caption.start, seconds, captions[i]);
-
-      // return i;
+    if (start >= seconds) {
       ret = i;
       break;
-      // return ret;
-    } else {
-      console.log("not there yet:", i, caption.start, seconds, caption);
     }
   }
   return ret;
 }
 
 function Captions(props: CaptionsProps) {
-  // return <div className={styles.Captions}>Captions</div>;
-  const [captionsData, setCaptionsData] = useState<Array<Footnote>>([]);
+  // const [captionsData, setCaptionsData] = useState<Array<Footnote>>([]);
   const [activeFootnoteIndex, setActiveFootnoteIndex] = useState<number>(0);
-  // const activeFootnote = useRef<HTMLDivElement>(null);
   const footnoteContainerRef = useRef<HTMLOListElement>(null);
 
-  useEffect(() => {
-    fetch(props.path)
-      .then((resp) => resp.json())
-      .then((data) => {
-        setCaptionsData(data);
-      });
-  }, [props.path]);
+  const { playerPosition, synchronize, videoPart } = props;
+
+  // console.log("captions", getVideoPartFootnotes(videoPart));
+  const captions = getVideoPartFootnotes(videoPart);
+
+  // useEffect(() => {
+  //   fetch(path)
+  //     .then((resp) => resp.json())
+  //     .then((data) => {
+  //       setCaptionsData(data);
+  //     });
+  // }, [path]);
 
   useEffect(() => {
-    const newFootnoteIndex = getFootnoteFromTime(
-      props.playerPosition,
-      captionsData
-    );
+    const newFootnoteIndex = getFootnoteFromTime(playerPosition, captions);
     console.log("new footnote index", activeFootnoteIndex, newFootnoteIndex);
     setActiveFootnoteIndex(newFootnoteIndex);
-  }, [props.playerPosition, captionsData, activeFootnoteIndex]);
+  }, [playerPosition, activeFootnoteIndex]);
 
   useEffect(() => {
-    if (props.synchronize && footnoteContainerRef.current) {
+    if (synchronize && footnoteContainerRef.current) {
       const children = footnoteContainerRef.current.children;
       const child = children[activeFootnoteIndex];
       child.scrollIntoView({
@@ -81,11 +76,7 @@ function Captions(props: CaptionsProps) {
         behavior: "smooth",
       });
     }
-  }, [props.playerPosition, activeFootnoteIndex, props.synchronize]);
-
-  if (captionsData.length < 1) {
-    return Loading();
-  }
+  }, [playerPosition, activeFootnoteIndex, synchronize]);
 
   return (
     <div className={styles.CaptionsContainer}>
@@ -103,16 +94,8 @@ function Captions(props: CaptionsProps) {
         </button>
       </div>
       <ol className={styles.CaptionColumn} ref={footnoteContainerRef}>
-        {captionsData.map((caption: Footnote, idx) => {
+        {captions.items.map((caption: IVTTItem, idx) => {
           const isActiveFootnote = activeFootnoteIndex === idx;
-          if (isActiveFootnote) {
-            console.log(
-              "is active footnote",
-              activeFootnoteIndex,
-              idx,
-              caption.text
-            );
-          }
 
           return (
             <li
@@ -123,10 +106,10 @@ function Captions(props: CaptionsProps) {
                   : styles.InactiveFootnote
               }`}
             >
-              <div className={styles.CaptionLabel}>{caption.label}</div>
+              <div className={styles.CaptionLabel}>{idx + 1}</div>
               <div
                 className={styles.CaptionText}
-                dangerouslySetInnerHTML={{ __html: caption.text }}
+                dangerouslySetInnerHTML={{ __html: caption.body.value }}
               ></div>
             </li>
           );

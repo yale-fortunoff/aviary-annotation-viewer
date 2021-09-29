@@ -1,17 +1,21 @@
+import { getVideoPartTitle } from "../../api";
+import { IVideoPart } from "../../api/iiifManifest";
 import styles from "./ControlBar.module.css";
 
 interface ControlBarProps {
-  hvtID: string;
-  currentPartNumber: number;
-  partList: Array<number>;
+  callNumber: string;
+  currentPartNumber: string;
+  partList: Array<IVideoPart>;
   downloadTranscriptURL: string;
   introductionURL: string;
+  setVideoPart: (part: IVideoPart) => void;
 }
 
 function ControlBar(props: ControlBarProps) {
   const {
     currentPartNumber,
-    hvtID,
+    setVideoPart,
+    callNumber: hvtID,
     partList,
     downloadTranscriptURL,
     introductionURL,
@@ -21,16 +25,21 @@ function ControlBar(props: ControlBarProps) {
     <div className={styles.ControlBar}>
       <div>{hvtID}</div>
       <div>
-        <select>
-          {partList.map((partNumber: number) => {
-            const isCurrentPart = partNumber === currentPartNumber;
-            console.log(
-              "isCurrentPart?",
-              isCurrentPart,
-              partNumber,
-              currentPartNumber
+        <select
+          onChange={(evt) => {
+            const newPart = partList[Number(evt.target.value)];
+            console.log("Set new part", newPart);
+            setVideoPart(newPart);
+          }}
+        >
+          {partList.map((part: IVideoPart, idx) => {
+            const partNumber = getVideoPartTitle(part);
+            // const isCurrentPart = partNumber === currentPartNumber;
+            return (
+              <option key={idx} value={idx}>
+                {partNumber}
+              </option>
             );
-            return <option value={partNumber}>Part {partNumber}</option>;
           })}
         </select>
       </div>

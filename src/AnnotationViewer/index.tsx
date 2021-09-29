@@ -2,27 +2,33 @@ import Captions from "./Captions";
 import Player, { PlayerSize } from "./Player";
 import style from "./AnnotationViewer.module.css";
 import ControlBar from "./ControlBar/index";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  getVideoParts,
+  getVideoPartTitle,
+  getVideoPartURL,
+  getVideoPartWebVTTURL,
+  getVideoTitleFromManifest,
+} from "../api";
+import { IManifest, IVideoPart } from "../api/iiifManifest";
 
 interface AnnotationViewerProps {
-  videoTitle: string;
-  videoURL: string;
-  transcript: string;
-  currentPosition: number;
-  hvtID: string;
-  currentPartNumber: number;
-  partList: Array<number>;
-  transcriptURL: string;
-  introductionURL: string;
+  manifestURL: string;
+  callNumber: string;
 }
 
 function AnnotationViewer(props: AnnotationViewerProps) {
   // State that needs to be passed between child components
   const [playerPosition, __setPlayerPosition] = useState<number>(0);
-  const [playerSize, setPlayerSize] = useState<PlayerSize>("medium");
-  const [currentFootnoteIndex, setCurrentFootnoteIndex] = useState<number>(0);
+  const playerSize: PlayerSize = "medium";
+  // const [currentFootnoteIndex, setCurrentFootnoteIndex] = useState<number>(0);
   const [syncFootnotesToPlayer, setSyncFootnotesToPlayer] =
     useState<boolean>(true);
+  const [videoTitle, setVideoTitle] = useState<string>("");
+  const [manifest, setManifest] = useState<object>();
+  const [videoPart, setVideoPart] = useState<IVideoPart>();
+
+  const { manifestURL, callNumber } = props;
 
   const setPlayerPosition = (seconds: number) => {
     __setPlayerPosition(seconds);
@@ -40,6 +46,22 @@ function AnnotationViewer(props: AnnotationViewerProps) {
     setSyncFootnotesToPlayer(!syncFootnotesToPlayer);
   };
 
+  useEffect(() => {
+    fetch(manifestURL)
+      .then((response) => response.json())
+      .then((manifest) => {
+        setManifest(manifest);
+        setVideoTitle(getVideoTitleFromManifest(manifest));
+        setVideoPart(getVideoParts(manifest as IManifest)[0]);
+      });
+  }, [manifestURL]);
+
+  if (!videoPart) {
+    return <div>Loading video part</div>;
+  }
+
+  console.log("Rendering with", videoPart);
+
   return (
     <div className={style.AnnotationViewerContainer}>
       <main className={style.Main}>
@@ -52,31 +74,27 @@ function AnnotationViewer(props: AnnotationViewerProps) {
             size={playerSize}
             sources={[
               {
-                src: "/data/video/video-2033-p1of2.mov",
+                src: getVideoPartURL(videoPart) || "",
                 type: "video/mp4",
               },
             ]}
-            tracks={[
-              {
-                languageCode: "en",
-                label: "English",
-                src: "/data/captions/transcript-2033-p1of2.webvtt",
-              },
-            ]}
+            videoPart={videoPart}
+            tracks={[]}
           />
         </div>
         <div className={style.Gray}>
           {" "}
-          <h1 className={style.VideoTitle}>{props.videoTitle}</h1>
+          <h1 className={style.VideoTitle}>{videoTitle}</h1>
         </div>
         <div className={style.Gray}>
           <div className={style.ControlBarContainer}>
             <ControlBar
-              introductionURL={props.introductionURL}
-              downloadTranscriptURL={props.transcriptURL}
-              partList={props.partList}
-              hvtID={props.hvtID}
-              currentPartNumber={props.currentPartNumber}
+              introductionURL={""}
+              downloadTranscriptURL={""}
+              partList={getVideoParts(manifest as IManifest)}
+              callNumber={callNumber}
+              currentPartNumber={"0"}
+              setVideoPart={setVideoPart}
             />
           </div>
         </div>
@@ -89,6 +107,7 @@ function AnnotationViewer(props: AnnotationViewerProps) {
             enableSynch={enableSynch}
             disableSynch={disableSynch}
             toggleSynch={toggleSynch}
+            videoPart={videoPart}
           />
         </div>
       </main>

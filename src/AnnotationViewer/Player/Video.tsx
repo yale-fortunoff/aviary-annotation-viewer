@@ -1,4 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
+import {
+  getStartAndEndFromVTTItem,
+  getVideoPartVTTs,
+  getVTTCueFromIVTTItem,
+} from "../../api";
+import { IVideoPart, IVTT, IVTTItem } from "../../api/iiifManifest";
 import styles from "./Video.module.css";
 
 interface Track {
@@ -17,12 +23,45 @@ interface VideoProps {
   sources: Array<VideoSource>;
   setPlayerPosition: (seconds: number) => void;
   playerPosition: number;
+
+  videoPart: IVideoPart;
 }
 
 function Video(props: VideoProps) {
   const videoElement = useRef<HTMLVideoElement>(null);
-  const trackElement = useRef<HTMLTrackElement>(null);
   const [currentText, setCurrentText] = useState<string>("");
+
+  const { videoPart } = props;
+
+  useEffect(() => {
+    console.log("Updating video part");
+    videoElement.current?.load();
+  }, [videoElement, videoPart]);
+
+  useEffect(() => {
+    if (!videoElement) {
+      return;
+    }
+
+    const VTTs = getVideoPartVTTs(videoPart);
+
+    (async function () {
+      VTTs.forEach((VTT: IVTT) => {
+        const track = videoElement.current?.addTextTrack(
+          "captions",
+          "Captions",
+          "en"
+        );
+
+        console.log("Adding VTT track", VTT, track);
+
+        VTT.items.forEach((cue: IVTTItem) => {
+          const { start, end } = getStartAndEndFromVTTItem(cue);
+          track?.addCue(getVTTCueFromIVTTItem(cue));
+        });
+      });
+    })();
+  }, [videoElement]);
 
   useEffect(() => {
     console.log("video text tracks", videoElement.current?.textTracks);
@@ -69,9 +108,9 @@ function Video(props: VideoProps) {
           controls
         >
           {props.sources.map((source: VideoSource) => (
-            <source src={source.src} type={source.type} />
+            <source key={source.src} src={source.src} type={source.type} />
           ))}
-          {props.tracks.map((track: Track) => (
+          {/* {props.tracks.map((track: Track) => (
             <track
               ref={trackElement}
               label={track.label || track.languageCode}
@@ -80,7 +119,7 @@ function Video(props: VideoProps) {
               src={track.src}
               default
             />
-          ))}
+          ))} */}
         </video>
         <div className={styles.CaptionContainer}>{currentText}</div>
       </div>
