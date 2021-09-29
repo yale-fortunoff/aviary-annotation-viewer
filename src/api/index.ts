@@ -55,9 +55,9 @@ export function getVideoPartVTTs(videoPart: IVideoPart): Array<IVTT> {
 
 }
 
-export const getVideoPartFootnotes = (videoPart: IVideoPart): IVTT => (
-    getVideoPartAnnotationPageByLabel(videoPart, label => label.trim().endsWith("Critical Edition"))[0]
-)
+export const getVideoPartFootnotes = (videoPart: IVideoPart): IVTT => {
+    return getVideoPartAnnotationPageByLabel(videoPart, label => label.trim().endsWith("Critical Edition"))[0]
+}
 
 export function getStartAndEndFromVTTItem(vttItem: IVTTItem): { start: number, end: number } {
     const t = vttItem.target.split("#t=").reverse()[0];

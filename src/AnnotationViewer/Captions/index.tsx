@@ -62,6 +62,9 @@ function Captions(props: CaptionsProps) {
   // }, [path]);
 
   useEffect(() => {
+    if (!captions) {
+      return;
+    }
     const newFootnoteIndex = getFootnoteFromTime(playerPosition, captions);
     setActiveFootnoteIndex(newFootnoteIndex);
   }, [playerPosition, activeFootnoteIndex, captions]);
@@ -77,6 +80,9 @@ function Captions(props: CaptionsProps) {
     }
   }, [playerPosition, activeFootnoteIndex, synchronize]);
 
+  if (!captions) {
+    return <div>Something went wrong while loading captions data.</div>;
+  }
   return (
     <div className={styles.CaptionsContainer}>
       {/* <div className={styles.CaptionMeta}>
