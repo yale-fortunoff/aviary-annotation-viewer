@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Captions from './Captions';
 import Player, { PlayerSize } from './Player';
 import style from './AnnotationViewer.module.css';
@@ -47,9 +47,9 @@ function AnnotationViewer(props: AnnotationViewerProps) {
   useEffect(() => {
     fetch(manifestURL)
       .then((response) => response.json())
-      .then((manifest) => {
-        setManifest(manifest);
-        setVideoTitle(getVideoTitleFromManifest(manifest));
+      .then((manifestData) => {
+        setManifest(manifestData);
+        setVideoTitle(getVideoTitleFromManifest(manifestData));
         setVideoPart(getVideoParts(manifest as IManifest)[0]);
       });
   }, [manifestURL]);
@@ -57,8 +57,6 @@ function AnnotationViewer(props: AnnotationViewerProps) {
   if (!videoPart) {
     return <div>Loading video part</div>;
   }
-
-  console.log('Rendering with', videoPart);
 
   return (
     <div className={style.AnnotationViewerContainer}>

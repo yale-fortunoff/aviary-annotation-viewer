@@ -1,5 +1,4 @@
-// import React from "react";
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -40,7 +39,7 @@ function App() {
   useEffect(() => {
     fetch('/data/config.json')
       .then((resp) => resp.json())
-      .then((config) => setConfig(config));
+      .then((configData) => setConfig(configData));
   }, []);
 
   if (!config) {

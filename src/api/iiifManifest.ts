@@ -84,7 +84,7 @@ export interface IVTTItem extends HasID {
   target: string;
 }
 
-export interface IVideoPart extends HasLabel {
+export interface IVideoPart extends HasLabel, HasID {
   type: 'AnnotationPage';
   annotations: Array<{
     type: 'AnnotationPage';

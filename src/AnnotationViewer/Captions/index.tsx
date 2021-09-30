@@ -1,16 +1,19 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { getStartAndEndFromVTTItem, getVideoPartFootnotes } from '../../api';
 import { IVideoPart, IVTT, IVTTItem } from '../../api/iiifManifest';
 import styles from './Captions.module.css';
 
 interface CaptionsProps {
-  path: string;
+  // path: string;
   playerPosition: number;
   synchronize: boolean;
 
   videoPart: IVideoPart;
 
+  // TODO - Use these for the synch button implementation
+  // eslint-disable-next-line react/no-unused-prop-types
   enableSynch: () => void;
+  // eslint-disable-next-line react/no-unused-prop-types
   disableSynch: () => void;
   toggleSynch: () => void;
 }
@@ -31,7 +34,7 @@ interface CaptionsProps {
 
 function getFootnoteFromTime(seconds: number, captions: IVTT) {
   let ret = 0;
-  for (let i = 0; i < captions.items.length; i++) {
+  for (let i = 0; i < captions.items.length; i += 1) {
     const captionItem = captions.items[i];
     const { start } = getStartAndEndFromVTTItem(captionItem);
 
@@ -48,7 +51,7 @@ function Captions(props: CaptionsProps) {
   const [activeFootnoteIndex, setActiveFootnoteIndex] = useState<number>(0);
   const footnoteContainerRef = useRef<HTMLOListElement>(null);
 
-  const { playerPosition, synchronize, videoPart } = props;
+  const { playerPosition, synchronize, videoPart, toggleSynch } = props;
 
   // console.log("captions", getVideoPartFootnotes(videoPart));
   const captions = getVideoPartFootnotes(videoPart);
@@ -71,7 +74,7 @@ function Captions(props: CaptionsProps) {
 
   useEffect(() => {
     if (synchronize && footnoteContainerRef.current) {
-      const {children} = footnoteContainerRef.current;
+      const { children } = footnoteContainerRef.current;
       const child = children[activeFootnoteIndex];
       child.scrollIntoView({
         block: 'start',
@@ -90,12 +93,13 @@ function Captions(props: CaptionsProps) {
       </div> */}
       <div className={styles.SynchButtonContainer}>
         <button
+          type="button"
           className={styles.SynchButton}
           onClick={() => {
-            props.toggleSynch();
+            toggleSynch();
           }}
         >
-          {props.synchronize ? 'unsynch' : 'synch'}
+          {synchronize ? 'unsynch' : 'synch'}
         </button>
       </div>
       <ol className={styles.CaptionColumn} ref={footnoteContainerRef}>
@@ -104,7 +108,7 @@ function Captions(props: CaptionsProps) {
 
           return (
             <li
-              key={idx}
+              key={caption.id}
               className={`${styles.Caption} ${
                 isActiveFootnote
                   ? styles.ActiveFootnote
@@ -114,8 +118,10 @@ function Captions(props: CaptionsProps) {
               <div className={styles.CaptionLabel}>{idx + 1}</div>
               <div
                 className={styles.CaptionText}
+                // It has to be done this way.
+                // eslint-disable-next-line react/no-danger
                 dangerouslySetInnerHTML={{ __html: caption.body.value }}
-               />
+              />
             </li>
           );
         })}

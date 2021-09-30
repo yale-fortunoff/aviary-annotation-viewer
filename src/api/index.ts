@@ -34,11 +34,6 @@ export function getVideoPartURL(videoPart: IVideoPart): string {
   return videoPart.items[0].items[0].body.id;
 }
 
-export function getVideoPartWebVTTURL(videoPart: IVideoPart): string {
-  console.log('Getting captions URL from ', videoPart);
-  return '/data/captions/transcript-2033-p1of2.webvtt';
-}
-
 function getVideoPartAnnotationPageByLabel(
   videoPart: IVideoPart,
   matchFunc: (label: string) => boolean

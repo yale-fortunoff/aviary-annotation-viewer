@@ -10,7 +10,8 @@ function ControlBar(props: ControlBarProps) {
   return (
     <div>
       <button
-        onClick={function () {
+        type="button"
+        onClick={() => {
           props.setPlayerSize(
             props.playerSize === 'medium' ? 'small' : 'medium'
           );
