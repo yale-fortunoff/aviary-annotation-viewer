@@ -1,10 +1,11 @@
-import { getVideoPartTitle } from "../../api";
-import { IVideoPart } from "../../api/iiifManifest";
-import styles from "./ControlBar.module.css";
+import React from 'react';
+import { getVideoPartTitle } from '../../api';
+import { IVideoPart } from '../../api/iiifManifest';
+import styles from './ControlBar.module.css';
 
 interface ControlBarProps {
   callNumber: string;
-  currentPartNumber: string;
+  // currentPartNumber: string;
   partList: Array<IVideoPart>;
   downloadTranscriptURL: string;
   introductionURL: string;
@@ -27,7 +28,6 @@ function ControlBar(props: ControlBarProps) {
         <select
           onChange={(evt) => {
             const newPart = partList[Number(evt.target.value)];
-            console.log("Set new part", newPart);
             setVideoPart(newPart);
           }}
         >
@@ -35,7 +35,7 @@ function ControlBar(props: ControlBarProps) {
             const partNumber = getVideoPartTitle(part);
             // const isCurrentPart = partNumber === currentPartNumber;
             return (
-              <option key={idx} value={idx}>
+              <option key={part.id} value={idx}>
                 {partNumber}
               </option>
             );
@@ -43,7 +43,7 @@ function ControlBar(props: ControlBarProps) {
         </select>
       </div>
       <div>
-        {" "}
+        {' '}
         <a href={introductionURL}>Introduction</a>
       </div>
       <div>

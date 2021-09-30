@@ -1,0 +1,13 @@
+{
+  "files.associations": {
+    "*.ttml": "xml",
+    "*.ttss": "css"
+  },
+  "jupyter.jupyterServerType": "local",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "javascript.format.enable": false,
+  "typescript.format.enable": false
+}

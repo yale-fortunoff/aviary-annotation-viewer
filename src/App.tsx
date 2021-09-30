@@ -1,15 +1,14 @@
-// import React from "react";
-import { useEffect, useState } from "react";
-import AnnotationViewer from "./AnnotationViewer";
+import React, { useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   useParams,
-} from "react-router-dom";
-import { getVideoConfigFromSlug } from "./api/";
-import IndexPage from "./AnnotationViewer/IndexPage";
-import { IConfig } from "./api/interfaces";
+} from 'react-router-dom';
+import AnnotationViewer from './AnnotationViewer';
+import { getVideoConfigFromSlug } from './api';
+import IndexPage from './AnnotationViewer/IndexPage';
+import { IConfig } from './api/interfaces';
 
 interface AnnotationViewerFromSlugProps {
   config: IConfig;
@@ -38,9 +37,9 @@ function App() {
   const [config, setConfig] = useState<IConfig>();
 
   useEffect(() => {
-    fetch("/data/config.json")
+    fetch('/data/config.json')
       .then((resp) => resp.json())
-      .then((config) => setConfig(config));
+      .then((configData) => setConfig(configData));
   }, []);
 
   if (!config) {

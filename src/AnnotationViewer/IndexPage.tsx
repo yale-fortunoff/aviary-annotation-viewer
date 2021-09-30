@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
-import { IConfig, IVideoConfigEntry } from "../api/interfaces";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { IConfig, IVideoConfigEntry } from '../api/interfaces';
 
 interface IndexPageProps {
   config: IConfig;
