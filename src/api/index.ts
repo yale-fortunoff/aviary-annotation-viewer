@@ -44,15 +44,11 @@ function getVideoPartAnnotationPageByLabel(
   matchFunc: (label: string) => boolean
 ): Array<IVTT> {
   return videoPart.annotations
-    .filter((annotation) => {
-      return matchFunc(annotation.label['en'][0]);
-    })
-    .map((vtt) => {
-      return {
+    .filter((annotation) => matchFunc(annotation.label.en[0]))
+    .map((vtt) => ({
         items: [],
         ...vtt,
-      };
-    });
+      }));
 }
 
 // Get all annotations from a video part that end with .vtt
@@ -62,11 +58,9 @@ export function getVideoPartVTTs(videoPart: IVideoPart): Array<IVTT> {
   );
 }
 
-export const getVideoPartFootnotes = (videoPart: IVideoPart): IVTT => {
-  return getVideoPartAnnotationPageByLabel(videoPart, (label) =>
+export const getVideoPartFootnotes = (videoPart: IVideoPart): IVTT => getVideoPartAnnotationPageByLabel(videoPart, (label) =>
     label.trim().endsWith('Critical Edition')
   )[0];
-};
 
 export function getStartAndEndFromVTTItem(vttItem: IVTTItem): {
   start: number;

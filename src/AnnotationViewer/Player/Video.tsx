@@ -85,7 +85,7 @@ function Video(props: VideoProps) {
   }, [videoElement]);
 
   return (
-    <React.Fragment>
+    <>
       <div className={styles.VideoContainer}>
         <video
           ref={videoElement}
@@ -118,7 +118,7 @@ function Video(props: VideoProps) {
         </video>
         {/* <div className={styles.CaptionContainer}>{currentText}</div> */}
       </div>
-    </React.Fragment>
+    </>
   );
 }
 

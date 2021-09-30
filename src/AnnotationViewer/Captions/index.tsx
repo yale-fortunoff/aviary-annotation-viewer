@@ -71,7 +71,7 @@ function Captions(props: CaptionsProps) {
 
   useEffect(() => {
     if (synchronize && footnoteContainerRef.current) {
-      const children = footnoteContainerRef.current.children;
+      const {children} = footnoteContainerRef.current;
       const child = children[activeFootnoteIndex];
       child.scrollIntoView({
         block: 'start',
@@ -115,7 +115,7 @@ function Captions(props: CaptionsProps) {
               <div
                 className={styles.CaptionText}
                 dangerouslySetInnerHTML={{ __html: caption.body.value }}
-              ></div>
+               />
             </li>
           );
         })}
