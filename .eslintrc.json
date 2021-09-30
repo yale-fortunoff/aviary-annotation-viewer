@@ -17,7 +17,7 @@
   "rules": {
     "react/jsx-filename-extension": [
       1,
-      { "extensions": [".tsx", ".jsx", ".ts"] }
+      { "extensions": [".tsx", ".jsx", ".js", ".ts"] }
     ],
     "import/no-unresolved": "off", //["off", { "ignore": ["*.svg"] }],
     "no-unused-vars": "off",
@@ -26,9 +26,10 @@
     "no-underscore-dangle": "off",
     "no-use-before-define": "off",
     // "@typescript-eslint/no-use-before-define": ["error"],
+    "import/no-extraneous-dependencies": "off",
     "import/extensions": [
       "error",
-      "ignorePackages",
+      "never",
       {
         "js": "never",
         "jsx": "never",
