@@ -13,12 +13,16 @@ import { IManifest, IVideoPart } from '../api/iiifManifest';
 interface AnnotationViewerProps {
   manifestURL: string;
   callNumber: string;
+  playerSize?: PlayerSize;
 }
+
+AnnotationViewer.defaultProps = {
+  playerSize: 'medium',
+};
 
 function AnnotationViewer(props: AnnotationViewerProps) {
   // State that needs to be passed between child components
   const [playerPosition, __setPlayerPosition] = useState<number>(0);
-  const playerSize: PlayerSize = 'medium';
   // const [currentFootnoteIndex, setCurrentFootnoteIndex] = useState<number>(0);
   const [syncFootnotesToPlayer, setSyncFootnotesToPlayer] =
     useState<boolean>(true);
@@ -26,7 +30,7 @@ function AnnotationViewer(props: AnnotationViewerProps) {
   const [manifest, setManifest] = useState<object>();
   const [videoPart, setVideoPart] = useState<IVideoPart>();
 
-  const { manifestURL, callNumber } = props;
+  const { manifestURL, callNumber, playerSize } = props;
 
   const setPlayerPosition = (seconds: number) => {
     __setPlayerPosition(seconds);
@@ -50,7 +54,7 @@ function AnnotationViewer(props: AnnotationViewerProps) {
       .then((manifestData) => {
         setManifest(manifestData);
         setVideoTitle(getVideoTitleFromManifest(manifestData));
-        setVideoPart(getVideoParts(manifest as IManifest)[0]);
+        setVideoPart(getVideoParts(manifestData as IManifest)[0]);
       });
   }, [manifestURL]);
 
@@ -67,7 +71,6 @@ function AnnotationViewer(props: AnnotationViewerProps) {
           <Player
             playerPosition={playerPosition}
             setPlayerPosition={setPlayerPosition}
-            size={playerSize}
             sources={[
               {
                 src: getVideoPartURL(videoPart) || '',
@@ -75,7 +78,6 @@ function AnnotationViewer(props: AnnotationViewerProps) {
               },
             ]}
             videoPart={videoPart}
-            tracks={[]}
           />
         </div>
         <div className={style.Gray}>
