@@ -1,14 +1,14 @@
-import Captions from "./Captions";
-import Player, { PlayerSize } from "./Player";
-import style from "./AnnotationViewer.module.css";
-import ControlBar from "./ControlBar/index";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
+import Captions from './Captions';
+import Player, { PlayerSize } from './Player';
+import style from './AnnotationViewer.module.css';
+import ControlBar from './ControlBar/index';
 import {
   getVideoParts,
   getVideoPartURL,
   getVideoTitleFromManifest,
-} from "../api";
-import { IManifest, IVideoPart } from "../api/iiifManifest";
+} from '../api';
+import { IManifest, IVideoPart } from '../api/iiifManifest';
 
 interface AnnotationViewerProps {
   manifestURL: string;
@@ -18,11 +18,11 @@ interface AnnotationViewerProps {
 function AnnotationViewer(props: AnnotationViewerProps) {
   // State that needs to be passed between child components
   const [playerPosition, __setPlayerPosition] = useState<number>(0);
-  const playerSize: PlayerSize = "medium";
+  const playerSize: PlayerSize = 'medium';
   // const [currentFootnoteIndex, setCurrentFootnoteIndex] = useState<number>(0);
   const [syncFootnotesToPlayer, setSyncFootnotesToPlayer] =
     useState<boolean>(true);
-  const [videoTitle, setVideoTitle] = useState<string>("");
+  const [videoTitle, setVideoTitle] = useState<string>('');
   const [manifest, setManifest] = useState<object>();
   const [videoPart, setVideoPart] = useState<IVideoPart>();
 
@@ -58,13 +58,13 @@ function AnnotationViewer(props: AnnotationViewerProps) {
     return <div>Loading video part</div>;
   }
 
-  console.log("Rendering with", videoPart);
+  console.log('Rendering with', videoPart);
 
   return (
     <div className={style.AnnotationViewerContainer}>
       <main className={style.Main}>
         <div
-          className={style.PlayerContainer + " " + style[`size-${playerSize}`]}
+          className={`${style.PlayerContainer} ${style[`size-${playerSize}`]}`}
         >
           <Player
             playerPosition={playerPosition}
@@ -72,8 +72,8 @@ function AnnotationViewer(props: AnnotationViewerProps) {
             size={playerSize}
             sources={[
               {
-                src: getVideoPartURL(videoPart) || "",
-                type: "video/mp4",
+                src: getVideoPartURL(videoPart) || '',
+                type: 'video/mp4',
               },
             ]}
             videoPart={videoPart}
@@ -81,17 +81,17 @@ function AnnotationViewer(props: AnnotationViewerProps) {
           />
         </div>
         <div className={style.Gray}>
-          {" "}
+          {' '}
           <h1 className={style.VideoTitle}>{videoTitle}</h1>
         </div>
         <div className={style.Gray}>
           <div className={style.ControlBarContainer}>
             <ControlBar
-              introductionURL={""}
-              downloadTranscriptURL={""}
+              introductionURL=""
+              downloadTranscriptURL=""
               partList={getVideoParts(manifest as IManifest)}
               callNumber={callNumber}
-              currentPartNumber={"0"}
+              currentPartNumber="0"
               setVideoPart={setVideoPart}
             />
           </div>

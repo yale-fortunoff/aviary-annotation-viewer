@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
-import { getStartAndEndFromVTTItem, getVideoPartFootnotes } from "../../api";
-import { IVideoPart, IVTT, IVTTItem } from "../../api/iiifManifest";
-import styles from "./Captions.module.css";
+import { useEffect, useRef, useState } from 'react';
+import { getStartAndEndFromVTTItem, getVideoPartFootnotes } from '../../api';
+import { IVideoPart, IVTT, IVTTItem } from '../../api/iiifManifest';
+import styles from './Captions.module.css';
 
 interface CaptionsProps {
   path: string;
@@ -74,8 +74,8 @@ function Captions(props: CaptionsProps) {
       const children = footnoteContainerRef.current.children;
       const child = children[activeFootnoteIndex];
       child.scrollIntoView({
-        block: "start",
-        behavior: "smooth",
+        block: 'start',
+        behavior: 'smooth',
       });
     }
   }, [playerPosition, activeFootnoteIndex, synchronize]);
@@ -95,7 +95,7 @@ function Captions(props: CaptionsProps) {
             props.toggleSynch();
           }}
         >
-          {props.synchronize ? "unsynch" : "synch"}
+          {props.synchronize ? 'unsynch' : 'synch'}
         </button>
       </div>
       <ol className={styles.CaptionColumn} ref={footnoteContainerRef}>

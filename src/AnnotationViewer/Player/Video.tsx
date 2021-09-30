@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from "react";
-import { getVideoPartVTTs, getVTTCueFromIVTTItem } from "../../api";
-import { IVideoPart, IVTT, IVTTItem } from "../../api/iiifManifest";
-import styles from "./Video.module.css";
+import React, { useEffect, useRef } from 'react';
+import { getVideoPartVTTs, getVTTCueFromIVTTItem } from '../../api';
+import { IVideoPart, IVTT, IVTTItem } from '../../api/iiifManifest';
+import styles from './Video.module.css';
 
 interface Track {
   label?: string;
@@ -30,7 +30,7 @@ function Video(props: VideoProps) {
   const { videoPart } = props;
 
   useEffect(() => {
-    console.log("Updating video part");
+    console.log('Updating video part');
     videoElement.current?.load();
   }, [videoElement, videoPart]);
 
@@ -44,12 +44,12 @@ function Video(props: VideoProps) {
     (async function () {
       VTTs.forEach((VTT: IVTT) => {
         const track = videoElement.current?.addTextTrack(
-          "captions",
-          "Captions",
-          "en"
+          'captions',
+          'Captions',
+          'en'
         );
 
-        console.log("Adding VTT track", VTT, track);
+        console.log('Adding VTT track', VTT, track);
 
         VTT.items.forEach((cue: IVTTItem) => {
           // const { start, end } = getStartAndEndFromVTTItem(cue);
@@ -74,12 +74,12 @@ function Video(props: VideoProps) {
   //   // setCurrentText(text);
   // };
   useEffect(() => {
-    console.log("video text tracks", videoElement.current?.textTracks);
+    console.log('video text tracks', videoElement.current?.textTracks);
     const tracks = videoElement.current?.textTracks || [];
     for (let i = 0; i < tracks.length; i++) {
       // const track: TextTrack = tracks[i];
 
-      console.log("Track", tracks[i]);
+      console.log('Track', tracks[i]);
       // track.oncuechange = handleCueChange;
     }
   }, [videoElement]);

@@ -11,10 +11,10 @@
 // export type Motivation = "painting" | "supplementing";
 
 export interface MultilingualValue<V> {
-    [lang: string]: V
+  [lang: string]: V;
 }
 
-export type MultilingualString = MultilingualValue<string>
+export type MultilingualString = MultilingualValue<string>;
 
 // export interface Resource {
 //     id: string
@@ -22,11 +22,11 @@ export type MultilingualString = MultilingualValue<string>
 // }
 
 export interface HasLabel {
-    label: MultilingualString
+  label: MultilingualString;
 }
 
 export interface HasItems<T> {
-    items: Array<T>
+  items: Array<T>;
 }
 
 // export interface Annotation extends Resource {
@@ -67,44 +67,42 @@ export interface HasItems<T> {
 // }
 
 export interface IVTT {
-    items: Array<IVTTItem>
+  items: Array<IVTTItem>;
 }
 export interface HasID {
-    id: string
+  id: string;
 }
 
-export interface IFootnoteItem extends HasID {
-
-}
+export interface IFootnoteItem extends HasID {}
 
 export interface IVTTItem extends HasID {
-    body: {
-        "format": "text/plain"
-        "type": "TextualBody"
-        value: string
-    }
-    target: string
+  body: {
+    format: 'text/plain';
+    type: 'TextualBody';
+    value: string;
+  };
+  target: string;
 }
 
 export interface IVideoPart extends HasLabel {
-    type: "AnnotationPage"
-    annotations: Array<{
-        type: "AnnotationPage"
-        label: MultilingualString
-    }>
+  type: 'AnnotationPage';
+  annotations: Array<{
+    type: 'AnnotationPage';
+    label: MultilingualString;
+  }>;
+  items: Array<{
     items: Array<{
-        items: Array<{
-            body: {
-                id: string
-            }
-            type: "Video"
-            duration: number
-            width: number
-            height: number
-        }>
-    }>
+      body: {
+        id: string;
+      };
+      type: 'Video';
+      duration: number;
+      width: number;
+      height: number;
+    }>;
+  }>;
 }
 
 export interface IManifest extends HasItems<IVideoPart> {
-    label: MultilingualString
+  label: MultilingualString;
 }

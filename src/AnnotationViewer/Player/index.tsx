@@ -1,6 +1,6 @@
-import { IVideoPart } from "../../api/iiifManifest";
-import styles from "./Player.module.css";
-import Video from "./Video";
+import { IVideoPart } from '../../api/iiifManifest';
+import styles from './Player.module.css';
+import Video from './Video';
 
 interface Track {
   label?: string;
@@ -23,7 +23,7 @@ interface PlayerProps {
   videoPart: IVideoPart;
 }
 
-export type PlayerSize = "small" | "medium" | "large";
+export type PlayerSize = 'small' | 'medium' | 'large';
 
 function Player(props: PlayerProps) {
   const { videoPart } = props;

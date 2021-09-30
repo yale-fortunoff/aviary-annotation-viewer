@@ -1,5 +1,5 @@
-import React from "react";
-import { PlayerSize } from "../Player";
+import React from 'react';
+import { PlayerSize } from '../Player';
 
 interface ControlBarProps {
   setPlayerSize: (size: PlayerSize) => void;
@@ -12,7 +12,7 @@ function ControlBar(props: ControlBarProps) {
       <button
         onClick={function () {
           props.setPlayerSize(
-            props.playerSize === "medium" ? "small" : "medium"
+            props.playerSize === 'medium' ? 'small' : 'medium'
           );
         }}
       >

@@ -1,6 +1,6 @@
-import { getVideoPartTitle } from "../../api";
-import { IVideoPart } from "../../api/iiifManifest";
-import styles from "./ControlBar.module.css";
+import { getVideoPartTitle } from '../../api';
+import { IVideoPart } from '../../api/iiifManifest';
+import styles from './ControlBar.module.css';
 
 interface ControlBarProps {
   callNumber: string;
@@ -27,7 +27,7 @@ function ControlBar(props: ControlBarProps) {
         <select
           onChange={(evt) => {
             const newPart = partList[Number(evt.target.value)];
-            console.log("Set new part", newPart);
+            console.log('Set new part', newPart);
             setVideoPart(newPart);
           }}
         >
@@ -43,7 +43,7 @@ function ControlBar(props: ControlBarProps) {
         </select>
       </div>
       <div>
-        {" "}
+        {' '}
         <a href={introductionURL}>Introduction</a>
       </div>
       <div>
