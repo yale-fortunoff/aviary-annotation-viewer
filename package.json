@@ -21,9 +21,11 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "DISABLE_ESLINT_PLUGIN=true react-scripts start",
+    "build": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
+    "test": "DISABLE_ESLINT_PLUGIN=true react-scripts test",
+    "format": "yarn prettier src --write",
+    "lint": "yarn eslint \"src/**\" --fix",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
