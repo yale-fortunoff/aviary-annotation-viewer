@@ -17,7 +17,7 @@ interface VideoSource {
 interface PlayerProps {
   tracks: Array<Track>;
   sources: Array<VideoSource>;
-  // size: PlayerSize;
+  size: PlayerSize;
   setPlayerPosition: (seconds: number) => void;
   playerPosition: number;
 
@@ -36,7 +36,6 @@ function Player(props: PlayerProps) {
         videoPart={videoPart}
         setPlayerPosition={setPlayerPosition}
         playerPosition={playerPosition}
-        tracks={tracks}
         sources={sources}
       />
     </div>

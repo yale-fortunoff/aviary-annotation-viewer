@@ -89,7 +89,6 @@ function AnnotationViewer(props: AnnotationViewerProps) {
               downloadTranscriptURL=""
               partList={getVideoParts(manifest as IManifest)}
               callNumber={callNumber}
-              currentPartNumber="0"
               setVideoPart={setVideoPart}
             />
           </div>
@@ -98,7 +97,6 @@ function AnnotationViewer(props: AnnotationViewerProps) {
         <div className={style.CaptionsContainer}>
           <Captions
             playerPosition={playerPosition}
-            path="/data/footnotes/footnotes-2033-p1of2.json"
             synchronize={syncFootnotesToPlayer}
             enableSynch={enableSynch}
             disableSynch={disableSynch}
