@@ -12,6 +12,35 @@ interface ControlBarProps {
   setVideoPart: (part: IVideoPart) => void;
 }
 
+interface DropdownItem {
+  id: string;
+  label: string;
+}
+
+interface DropdownProps {
+  items: Array<DropdownItem>;
+  changeFunc: (id: string) => void;
+}
+
+function Dropdown({ items, changeFunc }: DropdownProps) {
+  return (
+    <select
+      onChange={(evt) => {
+        changeFunc(evt.target.value);
+      }}
+    >
+      {items.map((item: DropdownItem) => {
+        const { id, label } = item;
+        return (
+          <option key={id} value={id}>
+            {label}
+          </option>
+        );
+      })}
+    </select>
+  );
+}
+
 function ControlBar(props: ControlBarProps) {
   const {
     setVideoPart,
@@ -25,22 +54,19 @@ function ControlBar(props: ControlBarProps) {
     <div className={styles.ControlBar}>
       <div>{hvtID}</div>
       <div>
-        <select
-          onChange={(evt) => {
-            const newPart = partList[Number(evt.target.value)];
-            setVideoPart(newPart);
+        <Dropdown
+          items={partList.map((part) => ({
+            ...part,
+            label: part.label.en || '',
+          }))}
+          changeFunc={(id: string) => {
+            const matches = partList.filter((part) => part.id === id);
+            if (matches.length < 1) {
+              return;
+            }
+            setVideoPart(matches[0]);
           }}
-        >
-          {partList.map((part: IVideoPart, idx) => {
-            const partNumber = getVideoPartTitle(part);
-            // const isCurrentPart = partNumber === currentPartNumber;
-            return (
-              <option key={part.id} value={idx}>
-                {partNumber}
-              </option>
-            );
-          })}
-        </select>
+        />
       </div>
       <div>
         {' '}

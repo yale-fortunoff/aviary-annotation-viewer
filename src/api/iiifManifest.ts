@@ -66,7 +66,7 @@ export interface HasItems<T> {
 //     homepage: MultilingualString
 // }
 
-export interface IVTT {
+export interface IVTT extends HasLabel{
   items: Array<IVTTItem>;
 }
 export interface HasID {
