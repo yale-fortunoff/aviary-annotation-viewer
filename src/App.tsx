@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 import AnnotationViewer from './AnnotationViewer/AnnotationViewer';
 import { getVideoConfigFromSlug } from './api';
-import IndexPage from './AnnotationViewer/IndexPage';
+import IndexPage from './IndexPage';
 import { IConfig } from './api/interfaces';
 
 interface AnnotationViewerFromSlugProps {
