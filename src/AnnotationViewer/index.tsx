@@ -59,8 +59,10 @@ function AnnotationViewer(props: AnnotationViewerProps) {
         setManifest(manifestData);
         setVideoTitle(getVideoTitleFromManifest(manifestData));
         const initialVideoPart = getVideoParts(manifestData as IManifest)[0];
+        const criticalEdition = getVideoPartFootnotes(initialVideoPart);
+        const firstAnnotationSet = getVideoPartAnnotations(initialVideoPart);
         setVideoPart(initialVideoPart);
-        setAnnotationSet(getVideoPartFootnotes(initialVideoPart));
+        setAnnotationSet(criticalEdition || firstAnnotationSet);
       });
   }, [manifestURL]);
 

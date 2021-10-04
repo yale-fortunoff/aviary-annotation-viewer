@@ -3,8 +3,7 @@ import { getStartAndEndFromVTTItem } from '../../api';
 import {
   IAnnotationPage,
   // IVideoPart,
-  IVTT,
-  IVTTItem,
+  IAnnotationItem,
 } from '../../api/iiifManifest';
 import styles from './Captions.module.css';
 
@@ -42,7 +41,7 @@ Captions.defaultProps = {
 //   return <div>LoAdInG...</div>;
 // }
 
-function getFootnoteFromTime(seconds: number, captions: IVTT) {
+function getFootnoteFromTime(seconds: number, captions: IAnnotationPage) {
   let ret = 0;
   for (let i = 0; i < captions.items.length; i += 1) {
     const captionItem = captions.items[i];
@@ -103,8 +102,16 @@ function Captions(props: CaptionsProps) {
         </button>
       </div>
       <ol className={styles.CaptionColumn} ref={footnoteContainerRef}>
-        {annotationSet.items.map((caption: IVTTItem, idx) => {
+        {annotationSet.items.map((caption: IAnnotationItem, idx) => {
           const isActiveFootnote = activeFootnoteIndex === idx;
+
+          // TODO - Support XML (annotations with array bodies) if required
+          let captionContent = '';
+          if ('value' in caption.body) {
+            captionContent = caption.body.value;
+          } else {
+            captionContent = `XML annotations not supported. Array of length ${caption.body.length}`;
+          }
 
           return (
             <li
@@ -120,7 +127,7 @@ function Captions(props: CaptionsProps) {
                 className={styles.CaptionText}
                 // It has to be done this way.
                 // eslint-disable-next-line react/no-danger
-                dangerouslySetInnerHTML={{ __html: caption.body.value }}
+                dangerouslySetInnerHTML={{ __html: captionContent }}
               />
             </li>
           );

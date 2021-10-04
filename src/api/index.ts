@@ -1,4 +1,9 @@
-import { IManifest, IVideoPart, IVTT, IVTTItem } from './iiifManifest';
+import {
+  IManifest,
+  IVideoPart,
+  IAnnotationPage,
+  IAnnotationItem,
+} from './iiifManifest';
 import { IConfig, IVideoConfigEntry } from './interfaces';
 
 export function getVideoConfigFromSlug(
@@ -34,33 +39,42 @@ export function getVideoPartURL(videoPart: IVideoPart): string {
   return videoPart.items[0].items[0].body.id;
 }
 
-export const getVideoPartAnnotations = (videoPart:IVideoPart) => videoPart.annotations
+// TODO - Support XML. For now, drop support for it because it includes
+// array-type annotation item bodies. Not sure the best way to handle these yet
+export const getVideoPartAnnotations = (videoPart: IVideoPart) =>
+  videoPart.annotations.filter(
+    (annotation) => !annotation.label.en[0].endsWith('.xml')
+  );
 
 function getVideoPartAnnotationPageByLabel(
   videoPart: IVideoPart,
   matchFunc: (label: string) => boolean
-): Array<IVTT> {
-  return videoPart.annotations
-    .filter((annotation) => matchFunc(annotation.label.en[0]))
-    // .map((vtt) => ({
-    //   items: [],
-    //   ...vtt,
-    // }));
+): Array<IAnnotationPage> {
+  return getVideoPartAnnotations(videoPart).filter((annotation) =>
+    matchFunc(annotation.label.en[0])
+  );
+  // TODO - Support XML. For now, just hide it
+  // .map((vtt) => ({
+  //   items: [],
+  //   ...vtt,
+  // }));
 }
 
 // Get all annotations from a video part that end with .vtt
-export function getVideoPartVTTs(videoPart: IVideoPart): Array<IVTT> {
+export function getVideoPartVTTs(
+  videoPart: IVideoPart
+): Array<IAnnotationPage> {
   return getVideoPartAnnotationPageByLabel(videoPart, (label) =>
     label.endsWith('.vtt')
   );
 }
 
-export const getVideoPartFootnotes = (videoPart: IVideoPart): IVTT =>
+export const getVideoPartFootnotes = (videoPart: IVideoPart): IAnnotationPage =>
   getVideoPartAnnotationPageByLabel(videoPart, (label) =>
     label.trim().endsWith('Critical Edition')
   )[0];
 
-export function getStartAndEndFromVTTItem(vttItem: IVTTItem): {
+export function getStartAndEndFromVTTItem(vttItem: IAnnotationItem): {
   start: number;
   end: number;
 } {
@@ -70,7 +84,10 @@ export function getStartAndEndFromVTTItem(vttItem: IVTTItem): {
   return { start, end };
 }
 
-export function getVTTCueFromIVTTItem(vttItem: IVTTItem): VTTCue {
+export function getVTTCueFromIVTTItem(vttItem: IAnnotationItem): VTTCue {
   const { start, end } = getStartAndEndFromVTTItem(vttItem);
-  return new VTTCue(start, end, vttItem.body.value);
+  if ('value' in vttItem.body) {
+    return new VTTCue(start, end, vttItem.body.value);
+  }
+  return new VTTCue(start, end, '');
 }

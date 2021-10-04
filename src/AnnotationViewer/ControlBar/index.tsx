@@ -1,5 +1,4 @@
 import React from 'react';
-import { getVideoPartTitle } from '../../api';
 import { IAnnotationPage, IVideoPart } from '../../api/iiifManifest';
 import styles from './ControlBar.module.css';
 
@@ -32,6 +31,7 @@ interface DropdownProps {
 function Dropdown({ currentItemID, items, changeFunc }: DropdownProps) {
   return (
     <select
+      defaultValue={currentItemID}
       onChange={(evt) => {
         changeFunc(evt.target.value);
       }}
@@ -39,7 +39,7 @@ function Dropdown({ currentItemID, items, changeFunc }: DropdownProps) {
       {items.map((item: DropdownItem) => {
         const { id, label } = item;
         return (
-          <option key={id} value={id} selected={item.id === currentItemID}>
+          <option key={id} value={id}>
             {label}
           </option>
         );

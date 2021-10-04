@@ -1,7 +1,11 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 import React, { useEffect, useRef } from 'react';
 import { getVideoPartVTTs, getVTTCueFromIVTTItem } from '../../api';
-import { IVideoPart, IVTT, IVTTItem } from '../../api/iiifManifest';
+import {
+  IVideoPart,
+  IAnnotationItem,
+  IAnnotationPage,
+} from '../../api/iiifManifest';
 import styles from './Video.module.css';
 
 // interface Track {
@@ -42,7 +46,7 @@ function Video(props: VideoProps) {
     const VTTs = getVideoPartVTTs(videoPart);
 
     (async () => {
-      VTTs.forEach((VTT: IVTT) => {
+      VTTs.forEach((VTT: IAnnotationPage) => {
         const label: string = VTT.label.en[0].replace('.vtt', '');
         const parts = label.split('_').reverse();
         let lang = 'en';
@@ -56,7 +60,7 @@ function Video(props: VideoProps) {
           lang
         );
 
-        VTT.items.forEach((cue: IVTTItem) => {
+        VTT.items.forEach((cue: IAnnotationItem) => {
           // const { start, end } = getStartAndEndFromVTTItem(cue);
           track?.addCue(getVTTCueFromIVTTItem(cue));
         });
