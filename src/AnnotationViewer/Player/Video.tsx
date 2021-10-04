@@ -43,10 +43,17 @@ function Video(props: VideoProps) {
 
     (async () => {
       VTTs.forEach((VTT: IVTT) => {
+        const label: string = VTT.label.en[0].replace('.vtt', '');
+        const parts = label.split('_').reverse();
+        let lang = 'en';
+        if (parts[0].length === 2) {
+          [lang] = parts;
+        }
+
         const track = videoElement.current?.addTextTrack(
           'captions',
-          'Captions',
-          'en'
+          label,
+          lang
         );
 
         VTT.items.forEach((cue: IVTTItem) => {
