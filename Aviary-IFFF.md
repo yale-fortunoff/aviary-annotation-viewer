@@ -10,5 +10,6 @@
 
 * The XML annotations are structured differently. The Body of each is an array,
   rather than a string. Is this intentional? Do we need to do anything with XML
-  annotations?
+  annotations? It looks like these are only for FVA indexes. Is there ever a use
+  case where we would need to support them?
 
