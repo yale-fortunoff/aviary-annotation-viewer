@@ -32,11 +32,11 @@
   background-color: inherit;
 }
 
-.ActiveFootnote {
+.ActiveAnnotation {
   transition: background-color 1s;
 }
 
-.InactiveFootnote {
+.InactiveAnnotation {
   border: none;
 }
 

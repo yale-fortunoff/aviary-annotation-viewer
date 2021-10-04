@@ -5,16 +5,16 @@ import styles from './ControlBar.module.css';
 interface ControlBarProps {
   callNumber: string;
   // currentPartNumber: string;
-  partList: Array<IVideoPart>;
+  videoPartList: Array<IVideoPart>;
   setVideoPart: (part: IVideoPart) => void;
   currentVideoPart: IVideoPart;
 
   downloadTranscriptURL: string;
   introductionURL: string;
 
-  footnoteList: Array<IAnnotationPage>;
-  setFootnotes: (footnotes: IAnnotationPage) => void;
-  currentFootnoteSet: IAnnotationPage;
+  annotationSetList: Array<IAnnotationPage>;
+  setAnnotationSet: (annotationSet: IAnnotationPage) => void;
+  currentAnnotationSet: IAnnotationPage;
 }
 
 interface DropdownItem {
@@ -53,12 +53,12 @@ function ControlBar(props: ControlBarProps) {
     setVideoPart,
     currentVideoPart,
     callNumber: hvtID,
-    partList,
+    videoPartList: partList,
     downloadTranscriptURL,
     introductionURL,
-    footnoteList,
-    setFootnotes,
-    currentFootnoteSet,
+    annotationSetList,
+    setAnnotationSet,
+    currentAnnotationSet,
   } = props;
 
   return (
@@ -82,17 +82,17 @@ function ControlBar(props: ControlBarProps) {
       </div>
       <div>
         <Dropdown
-          currentItemID={currentFootnoteSet.id}
-          items={footnoteList.map((footnote) => ({
-            ...footnote,
-            label: footnote.label.en || '',
+          currentItemID={currentAnnotationSet.id}
+          items={annotationSetList.map((annotation) => ({
+            ...annotation,
+            label: annotation.label.en || '',
           }))}
           changeFunc={(id: string) => {
-            const matches = footnoteList.filter((fn) => fn.id === id);
+            const matches = annotationSetList.filter((fn) => fn.id === id);
             if (matches.length < 1) {
               return;
             }
-            setFootnotes(matches[0]);
+            setAnnotationSet(matches[0]);
           }}
         />
       </div>

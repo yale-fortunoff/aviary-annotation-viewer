@@ -69,7 +69,7 @@ export function getVideoPartVTTs(
   );
 }
 
-export const getVideoPartFootnotes = (videoPart: IVideoPart): IAnnotationPage =>
+export const getVideoPartCriticalEditionAnnotations = (videoPart: IVideoPart): IAnnotationPage =>
   getVideoPartAnnotationPageByLabel(videoPart, (label) =>
     label.trim().endsWith('Critical Edition')
   )[0];

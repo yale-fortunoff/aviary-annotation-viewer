@@ -27,21 +27,7 @@ Captions.defaultProps = {
   annotationSet: undefined,
 };
 
-// interface Caption {
-//   text: string;
-//   start: string;
-//   end: string;
-// }
-
-// interface Footnote extends Caption {
-//   label: string;
-// }
-
-// function Loading() {
-//   return <div>LoAdInG...</div>;
-// }
-
-function getFootnoteFromTime(seconds: number, captions: IAnnotationPage) {
+function getAnnotationFromTime(seconds: number, captions: IAnnotationPage) {
   let ret = 0;
   for (let i = 0; i < captions.items.length; i += 1) {
     const captionItem = captions.items[i];
@@ -56,30 +42,31 @@ function getFootnoteFromTime(seconds: number, captions: IAnnotationPage) {
 }
 
 function Captions(props: CaptionsProps) {
-  // const [captionsData, setCaptionsData] = useState<Array<Footnote>>([]);
-  const [activeFootnoteIndex, setActiveFootnoteIndex] = useState<number>(0);
-  const footnoteContainerRef = useRef<HTMLOListElement>(null);
+  const [activeAnnotationIndex, setActiveAnnotationIndex] = useState<number>(0);
+  const annotationContainerRef = useRef<HTMLOListElement>(null);
   const { playerPosition, synchronize, annotationSet, toggleSynch } = props;
-  // const captions = getVideoPartFootnotes(videoPart);
 
   useEffect(() => {
     if (!annotationSet) {
       return;
     }
-    const newFootnoteIndex = getFootnoteFromTime(playerPosition, annotationSet);
-    setActiveFootnoteIndex(newFootnoteIndex);
-  }, [playerPosition, activeFootnoteIndex, annotationSet]);
+    const newAnnotationIndex = getAnnotationFromTime(
+      playerPosition,
+      annotationSet
+    );
+    setActiveAnnotationIndex(newAnnotationIndex);
+  }, [playerPosition, activeAnnotationIndex, annotationSet]);
 
   useEffect(() => {
-    if (synchronize && footnoteContainerRef.current) {
-      const { children } = footnoteContainerRef.current;
-      const child = children[activeFootnoteIndex];
+    if (synchronize && annotationContainerRef.current) {
+      const { children } = annotationContainerRef.current;
+      const child = children[activeAnnotationIndex];
       child.scrollIntoView({
         block: 'start',
         behavior: 'smooth',
       });
     }
-  }, [playerPosition, activeFootnoteIndex, synchronize]);
+  }, [playerPosition, activeAnnotationIndex, synchronize]);
 
   if (!annotationSet) {
     return <div>Something went wrong while loading captions data.</div>;
@@ -87,9 +74,6 @@ function Captions(props: CaptionsProps) {
 
   return (
     <div className={styles.CaptionsContainer}>
-      {/* <div className={styles.CaptionMeta}>
-        {activeFootnoteIndex + 1} of {captionsData.length}
-      </div> */}
       <div className={styles.SynchButtonContainer}>
         <button
           type="button"
@@ -101,9 +85,9 @@ function Captions(props: CaptionsProps) {
           {synchronize ? 'unsynch' : 'synch'}
         </button>
       </div>
-      <ol className={styles.CaptionColumn} ref={footnoteContainerRef}>
+      <ol className={styles.CaptionColumn} ref={annotationContainerRef}>
         {annotationSet.items.map((caption: IAnnotationItem, idx) => {
-          const isActiveFootnote = activeFootnoteIndex === idx;
+          const isActiveAnnotation = activeAnnotationIndex === idx;
 
           // TODO - Support XML (annotations with array bodies) if required
           let captionContent = '';
@@ -117,9 +101,9 @@ function Captions(props: CaptionsProps) {
             <li
               key={caption.id}
               className={`${styles.Caption} ${
-                isActiveFootnote
-                  ? styles.ActiveFootnote
-                  : styles.InactiveFootnote
+                isActiveAnnotation
+                  ? styles.ActiveAnnotation
+                  : styles.InactiveAnnotation
               }`}
             >
               <div className={styles.CaptionLabel}>{idx + 1}</div>

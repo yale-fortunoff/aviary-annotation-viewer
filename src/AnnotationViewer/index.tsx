@@ -5,7 +5,7 @@ import style from './AnnotationViewer.module.css';
 import ControlBar from './ControlBar/index';
 import {
   getVideoPartAnnotations,
-  getVideoPartFootnotes,
+  getVideoPartCriticalEditionAnnotations,
   getVideoParts,
   getVideoPartURL,
   getVideoTitleFromManifest,
@@ -25,13 +25,14 @@ AnnotationViewer.defaultProps = {
 function AnnotationViewer(props: AnnotationViewerProps) {
   // State that needs to be passed between child components
   const [playerPosition, __setPlayerPosition] = useState<number>(0);
-  // const [currentFootnoteIndex, setCurrentFootnoteIndex] = useState<number>(0);
-  const [syncFootnotesToPlayer, setSyncFootnotesToPlayer] =
+  const [syncAnnotationsToPlayer, setSyncAnnotationsToPlayer] =
     useState<boolean>(true);
   const [videoTitle, setVideoTitle] = useState<string>('');
   const [manifest, setManifest] = useState<object>();
   const [videoPart, setVideoPart] = useState<IVideoPart>();
-  const [footnoteList, setFootnoteList] = useState<Array<IAnnotationPage>>([]);
+  const [annotationSetList, setAnnotationSetList] = useState<
+    Array<IAnnotationPage>
+  >([]);
   const [annotationSet, setAnnotationSet] = useState<IAnnotationPage>();
 
   const { manifestURL, callNumber, playerSize } = props;
@@ -41,15 +42,15 @@ function AnnotationViewer(props: AnnotationViewerProps) {
   };
 
   const disableSynch = () => {
-    setSyncFootnotesToPlayer(false);
+    setSyncAnnotationsToPlayer(false);
   };
 
   const enableSynch = () => {
-    setSyncFootnotesToPlayer(true);
+    setSyncAnnotationsToPlayer(true);
   };
 
   const toggleSynch = () => {
-    setSyncFootnotesToPlayer(!syncFootnotesToPlayer);
+    setSyncAnnotationsToPlayer(!syncAnnotationsToPlayer);
   };
 
   useEffect(() => {
@@ -59,7 +60,8 @@ function AnnotationViewer(props: AnnotationViewerProps) {
         setManifest(manifestData);
         setVideoTitle(getVideoTitleFromManifest(manifestData));
         const initialVideoPart = getVideoParts(manifestData as IManifest)[0];
-        const criticalEdition = getVideoPartFootnotes(initialVideoPart);
+        const criticalEdition =
+          getVideoPartCriticalEditionAnnotations(initialVideoPart);
         const firstAnnotationSet = getVideoPartAnnotations(initialVideoPart);
         setVideoPart(initialVideoPart);
         setAnnotationSet(criticalEdition || firstAnnotationSet);
@@ -70,7 +72,7 @@ function AnnotationViewer(props: AnnotationViewerProps) {
     if (!videoPart) {
       return;
     }
-    setFootnoteList(getVideoPartAnnotations(videoPart));
+    setAnnotationSetList(getVideoPartAnnotations(videoPart));
   }, [videoPart]);
 
   if (!videoPart) {
@@ -108,12 +110,12 @@ function AnnotationViewer(props: AnnotationViewerProps) {
             <ControlBar
               introductionURL=""
               downloadTranscriptURL=""
-              partList={getVideoParts(manifest as IManifest)}
+              videoPartList={getVideoParts(manifest as IManifest)}
               setVideoPart={setVideoPart}
               currentVideoPart={videoPart}
-              footnoteList={footnoteList}
-              currentFootnoteSet={annotationSet}
-              setFootnotes={setAnnotationSet}
+              annotationSetList={annotationSetList}
+              currentAnnotationSet={annotationSet}
+              setAnnotationSet={setAnnotationSet}
               callNumber={callNumber}
             />
           </div>
@@ -122,7 +124,7 @@ function AnnotationViewer(props: AnnotationViewerProps) {
         <div className={style.CaptionsContainer}>
           <Captions
             playerPosition={playerPosition}
-            synchronize={syncFootnotesToPlayer}
+            synchronize={syncAnnotationsToPlayer}
             enableSynch={enableSynch}
             disableSynch={disableSynch}
             toggleSynch={toggleSynch}
