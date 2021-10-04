@@ -1,15 +1,21 @@
 import React from 'react';
 import { getVideoPartTitle } from '../../api';
-import { IVideoPart } from '../../api/iiifManifest';
+import { IAnnotationPage, IVideoPart } from '../../api/iiifManifest';
 import styles from './ControlBar.module.css';
 
 interface ControlBarProps {
   callNumber: string;
   // currentPartNumber: string;
   partList: Array<IVideoPart>;
+  setVideoPart: (part: IVideoPart) => void;
+  currentVideoPart: IVideoPart;
+
   downloadTranscriptURL: string;
   introductionURL: string;
-  setVideoPart: (part: IVideoPart) => void;
+
+  footnoteList: Array<IAnnotationPage>;
+  setFootnotes: (footnotes: IAnnotationPage) => void;
+  currentFootnoteSet: IAnnotationPage;
 }
 
 interface DropdownItem {
@@ -19,10 +25,11 @@ interface DropdownItem {
 
 interface DropdownProps {
   items: Array<DropdownItem>;
+  currentItemID: string;
   changeFunc: (id: string) => void;
 }
 
-function Dropdown({ items, changeFunc }: DropdownProps) {
+function Dropdown({ currentItemID, items, changeFunc }: DropdownProps) {
   return (
     <select
       onChange={(evt) => {
@@ -32,7 +39,7 @@ function Dropdown({ items, changeFunc }: DropdownProps) {
       {items.map((item: DropdownItem) => {
         const { id, label } = item;
         return (
-          <option key={id} value={id}>
+          <option key={id} value={id} selected={item.id === currentItemID}>
             {label}
           </option>
         );
@@ -44,10 +51,14 @@ function Dropdown({ items, changeFunc }: DropdownProps) {
 function ControlBar(props: ControlBarProps) {
   const {
     setVideoPart,
+    currentVideoPart,
     callNumber: hvtID,
     partList,
     downloadTranscriptURL,
     introductionURL,
+    footnoteList,
+    setFootnotes,
+    currentFootnoteSet,
   } = props;
 
   return (
@@ -55,6 +66,7 @@ function ControlBar(props: ControlBarProps) {
       <div>{hvtID}</div>
       <div>
         <Dropdown
+          currentItemID={currentVideoPart.id}
           items={partList.map((part) => ({
             ...part,
             label: part.label.en || '',
@@ -65,6 +77,22 @@ function ControlBar(props: ControlBarProps) {
               return;
             }
             setVideoPart(matches[0]);
+          }}
+        />
+      </div>
+      <div>
+        <Dropdown
+          currentItemID={currentFootnoteSet.id}
+          items={footnoteList.map((footnote) => ({
+            ...footnote,
+            label: footnote.label.en || '',
+          }))}
+          changeFunc={(id: string) => {
+            const matches = footnoteList.filter((fn) => fn.id === id);
+            if (matches.length < 1) {
+              return;
+            }
+            setFootnotes(matches[0]);
           }}
         />
       </div>

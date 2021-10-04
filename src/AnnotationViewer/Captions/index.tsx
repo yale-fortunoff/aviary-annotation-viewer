@@ -1,14 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { getStartAndEndFromVTTItem, getVideoPartFootnotes } from '../../api';
-import { IVideoPart, IVTT, IVTTItem } from '../../api/iiifManifest';
+import { getStartAndEndFromVTTItem } from '../../api';
+import {
+  IAnnotationPage,
+  // IVideoPart,
+  IVTT,
+  IVTTItem,
+} from '../../api/iiifManifest';
 import styles from './Captions.module.css';
 
 interface CaptionsProps {
   // path: string;
   playerPosition: number;
   synchronize: boolean;
+  // videoPart: IVideoPart;
 
-  videoPart: IVideoPart;
+  annotationSet?: IAnnotationPage;
 
   // TODO - Use these for the synch button implementation
   // eslint-disable-next-line react/no-unused-prop-types
@@ -17,6 +23,10 @@ interface CaptionsProps {
   disableSynch: () => void;
   toggleSynch: () => void;
 }
+
+Captions.defaultProps = {
+  annotationSet: undefined,
+};
 
 // interface Caption {
 //   text: string;
@@ -50,27 +60,16 @@ function Captions(props: CaptionsProps) {
   // const [captionsData, setCaptionsData] = useState<Array<Footnote>>([]);
   const [activeFootnoteIndex, setActiveFootnoteIndex] = useState<number>(0);
   const footnoteContainerRef = useRef<HTMLOListElement>(null);
-
-  const { playerPosition, synchronize, videoPart, toggleSynch } = props;
-
-  // console.log("captions", getVideoPartFootnotes(videoPart));
-  const captions = getVideoPartFootnotes(videoPart);
-
-  // useEffect(() => {
-  //   fetch(path)
-  //     .then((resp) => resp.json())
-  //     .then((data) => {
-  //       setCaptionsData(data);
-  //     });
-  // }, [path]);
+  const { playerPosition, synchronize, annotationSet, toggleSynch } = props;
+  // const captions = getVideoPartFootnotes(videoPart);
 
   useEffect(() => {
-    if (!captions) {
+    if (!annotationSet) {
       return;
     }
-    const newFootnoteIndex = getFootnoteFromTime(playerPosition, captions);
+    const newFootnoteIndex = getFootnoteFromTime(playerPosition, annotationSet);
     setActiveFootnoteIndex(newFootnoteIndex);
-  }, [playerPosition, activeFootnoteIndex, captions]);
+  }, [playerPosition, activeFootnoteIndex, annotationSet]);
 
   useEffect(() => {
     if (synchronize && footnoteContainerRef.current) {
@@ -83,9 +82,10 @@ function Captions(props: CaptionsProps) {
     }
   }, [playerPosition, activeFootnoteIndex, synchronize]);
 
-  if (!captions) {
+  if (!annotationSet) {
     return <div>Something went wrong while loading captions data.</div>;
   }
+
   return (
     <div className={styles.CaptionsContainer}>
       {/* <div className={styles.CaptionMeta}>
@@ -103,7 +103,7 @@ function Captions(props: CaptionsProps) {
         </button>
       </div>
       <ol className={styles.CaptionColumn} ref={footnoteContainerRef}>
-        {captions.items.map((caption: IVTTItem, idx) => {
+        {annotationSet.items.map((caption: IVTTItem, idx) => {
           const isActiveFootnote = activeFootnoteIndex === idx;
 
           return (

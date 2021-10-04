@@ -66,7 +66,7 @@ export interface HasItems<T> {
 //     homepage: MultilingualString
 // }
 
-export interface IVTT extends HasLabel{
+export interface IVTT extends HasLabel, HasID{
   items: Array<IVTTItem>;
 }
 export interface HasID {
@@ -84,12 +84,12 @@ export interface IVTTItem extends HasID {
   target: string;
 }
 
+export interface IAnnotationPage extends HasLabel, HasID, HasItems<IVTTItem>{
+}
+
 export interface IVideoPart extends HasLabel, HasID {
-  type: 'AnnotationPage';
-  annotations: Array<{
-    type: 'AnnotationPage';
-    label: MultilingualString;
-  }>;
+  type: 'Canvas';
+  annotations: Array<IAnnotationPage>;
   items: Array<{
     items: Array<{
       body: {

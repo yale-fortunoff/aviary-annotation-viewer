@@ -4,11 +4,13 @@ import Player, { PlayerSize } from './Player';
 import style from './AnnotationViewer.module.css';
 import ControlBar from './ControlBar/index';
 import {
+  getVideoPartAnnotations,
+  getVideoPartFootnotes,
   getVideoParts,
   getVideoPartURL,
   getVideoTitleFromManifest,
 } from '../api';
-import { IManifest, IVideoPart } from '../api/iiifManifest';
+import { IAnnotationPage, IManifest, IVideoPart } from '../api/iiifManifest';
 
 interface AnnotationViewerProps {
   manifestURL: string;
@@ -29,6 +31,8 @@ function AnnotationViewer(props: AnnotationViewerProps) {
   const [videoTitle, setVideoTitle] = useState<string>('');
   const [manifest, setManifest] = useState<object>();
   const [videoPart, setVideoPart] = useState<IVideoPart>();
+  const [footnoteList, setFootnoteList] = useState<Array<IAnnotationPage>>([]);
+  const [annotationSet, setAnnotationSet] = useState<IAnnotationPage>();
 
   const { manifestURL, callNumber, playerSize } = props;
 
@@ -54,12 +58,25 @@ function AnnotationViewer(props: AnnotationViewerProps) {
       .then((manifestData) => {
         setManifest(manifestData);
         setVideoTitle(getVideoTitleFromManifest(manifestData));
-        setVideoPart(getVideoParts(manifestData as IManifest)[0]);
+        const initialVideoPart = getVideoParts(manifestData as IManifest)[0];
+        setVideoPart(initialVideoPart);
+        setAnnotationSet(getVideoPartFootnotes(initialVideoPart));
       });
   }, [manifestURL]);
 
+  useEffect(() => {
+    if (!videoPart) {
+      return;
+    }
+    setFootnoteList(getVideoPartAnnotations(videoPart));
+  }, [videoPart]);
+
   if (!videoPart) {
     return <div>Loading video part</div>;
+  }
+
+  if (!annotationSet) {
+    return <div>Loading annotation sets...</div>;
   }
 
   return (
@@ -90,8 +107,12 @@ function AnnotationViewer(props: AnnotationViewerProps) {
               introductionURL=""
               downloadTranscriptURL=""
               partList={getVideoParts(manifest as IManifest)}
-              callNumber={callNumber}
               setVideoPart={setVideoPart}
+              currentVideoPart={videoPart}
+              footnoteList={footnoteList}
+              currentFootnoteSet={annotationSet}
+              setFootnotes={setAnnotationSet}
+              callNumber={callNumber}
             />
           </div>
         </div>
@@ -103,7 +124,8 @@ function AnnotationViewer(props: AnnotationViewerProps) {
             enableSynch={enableSynch}
             disableSynch={disableSynch}
             toggleSynch={toggleSynch}
-            videoPart={videoPart}
+            annotationSet={annotationSet}
+            // videoPart={videoPart}
           />
         </div>
       </main>

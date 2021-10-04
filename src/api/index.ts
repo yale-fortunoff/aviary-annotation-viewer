@@ -34,16 +34,18 @@ export function getVideoPartURL(videoPart: IVideoPart): string {
   return videoPart.items[0].items[0].body.id;
 }
 
+export const getVideoPartAnnotations = (videoPart:IVideoPart) => videoPart.annotations
+
 function getVideoPartAnnotationPageByLabel(
   videoPart: IVideoPart,
   matchFunc: (label: string) => boolean
 ): Array<IVTT> {
   return videoPart.annotations
     .filter((annotation) => matchFunc(annotation.label.en[0]))
-    .map((vtt) => ({
-      items: [],
-      ...vtt,
-    }));
+    // .map((vtt) => ({
+    //   items: [],
+    //   ...vtt,
+    // }));
 }
 
 // Get all annotations from a video part that end with .vtt
