@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import Captions from './Captions';
-import Player, { PlayerSize } from './Player';
+import Captions from './Captions/Captions';
+import Player, { PlayerSize } from './Player/Player';
 import style from './AnnotationViewer.module.css';
-import ControlBar from './ControlBar/index';
+import ControlBar from './ControlBar/ControlBar';
 import {
   getVideoPartAnnotations,
   getVideoPartCriticalEditionAnnotations,

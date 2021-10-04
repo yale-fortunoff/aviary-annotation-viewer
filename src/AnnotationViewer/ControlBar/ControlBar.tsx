@@ -1,6 +1,7 @@
 import React from 'react';
 import { IAnnotationPage, IVideoPart } from '../../api/iiifManifest';
 import styles from './ControlBar.module.css';
+import Dropdown from './Dropdown';
 
 interface ControlBarProps {
   callNumber: string;
@@ -15,37 +16,6 @@ interface ControlBarProps {
   annotationSetList: Array<IAnnotationPage>;
   setAnnotationSet: (annotationSet: IAnnotationPage) => void;
   currentAnnotationSet: IAnnotationPage;
-}
-
-interface DropdownItem {
-  id: string;
-  label: string;
-}
-
-interface DropdownProps {
-  items: Array<DropdownItem>;
-  currentItemID: string;
-  changeFunc: (id: string) => void;
-}
-
-function Dropdown({ currentItemID, items, changeFunc }: DropdownProps) {
-  return (
-    <select
-      defaultValue={currentItemID}
-      onChange={(evt) => {
-        changeFunc(evt.target.value);
-      }}
-    >
-      {items.map((item: DropdownItem) => {
-        const { id, label } = item;
-        return (
-          <option key={id} value={id}>
-            {label}
-          </option>
-        );
-      })}
-    </select>
-  );
 }
 
 function ControlBar(props: ControlBarProps) {

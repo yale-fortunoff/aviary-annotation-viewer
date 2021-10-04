@@ -5,7 +5,7 @@ import {
   Route,
   useParams,
 } from 'react-router-dom';
-import AnnotationViewer from './AnnotationViewer';
+import AnnotationViewer from './AnnotationViewer/AnnotationViewer';
 import { getVideoConfigFromSlug } from './api';
 import IndexPage from './AnnotationViewer/IndexPage';
 import { IConfig } from './api/interfaces';
