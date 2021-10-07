@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+
+for file in $(git diff --cached --name-only | grep -E '\.(js|jsx|ts|tsx)$')
+do
+  git show ":$file" | yarn eslint --stdin --stdin-filename "$file" 
+  if [ $? -ne 0 ]; then
+    echo ""
+    echo "!! Commit aborted due to linting errors"
+    echo "   * $file"
+    exit 1 
+  fi
+
+  git show ":$file" | yarn prettier --stdin-filepath "$file" 
+  if [ $? -ne 0 ]; then
+    echo ""
+    echo "!! Commit aborted due to formatting errors:"
+    echo "   * $file"
+    exit 1
+  fi
+
+done
