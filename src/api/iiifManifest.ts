@@ -1,3 +1,9 @@
+/**
+ * This is not meant to be a faithful and complete representation of the IIIF
+ * manifest specification. Instead it's only intended to represent the
+ * Aviary-flavored IIIF manifests.
+ * */
+
 export interface MultilingualValue<V> {
   [lang: string]: V;
 }
