@@ -14,13 +14,6 @@ interface CaptionsProps {
   // videoPart: IVideoPart;
 
   annotationSet?: IAnnotationPage;
-
-  // TODO - Use these for the synch button implementation
-  // eslint-disable-next-line react/no-unused-prop-types
-  enableSynch: () => void;
-  // eslint-disable-next-line react/no-unused-prop-types
-  disableSynch: () => void;
-  toggleSynch: () => void;
 }
 
 Captions.defaultProps = {
@@ -44,7 +37,7 @@ function getAnnotationFromTime(seconds: number, captions: IAnnotationPage) {
 function Captions(props: CaptionsProps) {
   const [activeAnnotationIndex, setActiveAnnotationIndex] = useState<number>(0);
   const annotationContainerRef = useRef<HTMLOListElement>(null);
-  const { playerPosition, synchronize, annotationSet, toggleSynch } = props;
+  const { playerPosition, synchronize, annotationSet } = props;
 
   useEffect(() => {
     if (!annotationSet) {
@@ -74,17 +67,6 @@ function Captions(props: CaptionsProps) {
 
   return (
     <div className={styles.CaptionsContainer}>
-      <div className={styles.SynchButtonContainer}>
-        <button
-          type="button"
-          className={styles.SynchButton}
-          onClick={() => {
-            toggleSynch();
-          }}
-        >
-          {synchronize ? 'unsynch' : 'synch'}
-        </button>
-      </div>
       <ol className={styles.CaptionColumn} ref={annotationContainerRef}>
         {annotationSet.items.map((caption: IAnnotationItem, idx) => {
           const isActiveAnnotation = activeAnnotationIndex === idx;

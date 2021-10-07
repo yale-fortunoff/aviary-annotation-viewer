@@ -1,0 +1,12 @@
+.Dropdown {
+  margin-right: 10px;
+}
+.Dropdown select {
+  max-width: 200px;
+  text-overflow: ellipsis;
+}
+
+.Dropdown label {
+  font-weight: 600;
+  margin-right: 4px;
+}

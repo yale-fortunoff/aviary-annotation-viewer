@@ -13,7 +13,6 @@ export interface ControlBarLinkProps {
 }
 
 interface ControlBarProps {
-  callNumber: string;
   // currentPartNumber: string;
   videoPartList: Array<IVideoPart>;
   setVideoPart: (part: IVideoPart) => void;
@@ -33,10 +32,7 @@ function ControlBar(props: ControlBarProps) {
   const {
     setVideoPart,
     currentVideoPart,
-    callNumber: hvtID,
     videoPartList: partList,
-    // downloadTranscriptURL,
-    // introductionURL,
     annotationSetList,
     setAnnotationSet,
     currentAnnotationSet,
@@ -44,10 +40,10 @@ function ControlBar(props: ControlBarProps) {
   } = props;
 
   return (
-    <div className={styles.ControlBar}>
-      <div>{hvtID}</div>
+    <div className={`${styles.ControlBar}`}>
       <div>
         <Dropdown
+          labelText="Video part"
           currentItemID={currentVideoPart.id}
           items={partList.map((part) => ({
             ...part,
@@ -64,6 +60,7 @@ function ControlBar(props: ControlBarProps) {
       </div>
       <div>
         <Dropdown
+          labelText="Annotation Set"
           currentItemID={currentAnnotationSet.id}
           items={annotationSetList.map((annotation) => ({
             ...annotation,

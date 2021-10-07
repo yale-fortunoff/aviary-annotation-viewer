@@ -80,6 +80,8 @@ function Video(props: VideoProps) {
     <>
       <div className={styles.VideoContainer}>
         <video
+          controlsList="nofullscreen"
+          disablePictureInPicture
           ref={videoElement}
           onTimeUpdate={() => {
             const seconds = Math.round(

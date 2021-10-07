@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { v4 as uuid } from 'uuid';
 import Captions from './Captions/Captions';
 import Player, { PlayerSize } from './Player/Player';
 import style from './AnnotationViewer.module.css';
@@ -11,6 +12,7 @@ import {
   getVideoTitleFromManifest,
 } from '../api';
 import { IAnnotationPage, IManifest, IVideoPart } from '../api/iiifManifest';
+import ToggleButton from './ToggleButton/ToggleButton';
 
 interface AnnotationViewerProps {
   manifestURL: string;
@@ -40,14 +42,6 @@ function AnnotationViewer(props: AnnotationViewerProps) {
 
   const setPlayerPosition = (seconds: number) => {
     __setPlayerPosition(seconds);
-  };
-
-  const disableSynch = () => {
-    setSyncAnnotationsToPlayer(false);
-  };
-
-  const enableSynch = () => {
-    setSyncAnnotationsToPlayer(true);
   };
 
   const toggleSynch = () => {
@@ -102,11 +96,7 @@ function AnnotationViewer(props: AnnotationViewerProps) {
             videoPart={videoPart}
           />
         </div>
-        <div className={style.Gray}>
-          {' '}
-          <h1 className={style.VideoTitle}>{videoTitle}</h1>
-        </div>
-        <div className={style.Gray}>
+        <div className={style.PreambleBlock}>
           <div className={style.ControlBarContainer}>
             <ControlBar
               // introductionURL=""
@@ -117,8 +107,25 @@ function AnnotationViewer(props: AnnotationViewerProps) {
               annotationSetList={annotationSetList}
               currentAnnotationSet={annotationSet}
               setAnnotationSet={setAnnotationSet}
-              callNumber={callNumber}
-              links={controlBarLinks}
+              links={[]}
+            />
+          </div>
+          <div className={`${style.TitleBlock}`}>
+            <div className={style.LeftSide}>
+              <h1 className={style.VideoTitle}>{videoTitle}</h1>
+              <div className={style.LinkTray}>
+                <div className={style.CallNumber}>{callNumber}</div>
+                {controlBarLinks.map((link) => (
+                  <a key={`link-tray-link-${uuid()}`} href={link.href}>
+                    {link.text}
+                  </a>
+                ))}
+              </div>
+            </div>
+            <ToggleButton
+              toggleFunc={toggleSynch}
+              active={syncAnnotationsToPlayer}
+              labelText="Synchronize Annotations"
             />
           </div>
         </div>
@@ -127,9 +134,6 @@ function AnnotationViewer(props: AnnotationViewerProps) {
           <Captions
             playerPosition={playerPosition}
             synchronize={syncAnnotationsToPlayer}
-            enableSynch={enableSynch}
-            disableSynch={disableSynch}
-            toggleSynch={toggleSynch}
             annotationSet={annotationSet}
             // videoPart={videoPart}
           />
