@@ -41,23 +41,25 @@ function ControlBar(props: ControlBarProps) {
 
   return (
     <div className={`${styles.ControlBar}`}>
-      <div>
-        <Dropdown
-          labelText="Video part"
-          currentItemID={currentVideoPart.id}
-          items={partList.map((part) => ({
-            ...part,
-            label: part.label.en || '',
-          }))}
-          changeFunc={(id: string) => {
-            const matches = partList.filter((part) => part.id === id);
-            if (matches.length < 1) {
-              return;
-            }
-            setVideoPart(matches[0]);
-          }}
-        />
-      </div>
+      {partList.length > 1 ? (
+        <div>
+          <Dropdown
+            labelText="Video part"
+            currentItemID={currentVideoPart.id}
+            items={partList.map((part) => ({
+              ...part,
+              label: part.label.en || '',
+            }))}
+            changeFunc={(id: string) => {
+              const matches = partList.filter((part) => part.id === id);
+              if (matches.length < 1) {
+                return;
+              }
+              setVideoPart(matches[0]);
+            }}
+          />
+        </div>
+      ) : null}
       <div>
         <Dropdown
           labelText="Annotation Set"
