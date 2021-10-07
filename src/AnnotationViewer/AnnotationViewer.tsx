@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Captions from './Captions/Captions';
 import Player, { PlayerSize } from './Player/Player';
 import style from './AnnotationViewer.module.css';
-import ControlBar from './ControlBar/ControlBar';
+import ControlBar, { ControlBarLinkItem } from './ControlBar/ControlBar';
 import {
   getVideoPartAnnotations,
   getVideoPartCriticalEditionAnnotations,
@@ -16,6 +16,7 @@ interface AnnotationViewerProps {
   manifestURL: string;
   callNumber: string;
   playerSize?: PlayerSize;
+  controlBarLinks: Array<ControlBarLinkItem>;
 }
 
 AnnotationViewer.defaultProps = {
@@ -35,7 +36,7 @@ function AnnotationViewer(props: AnnotationViewerProps) {
   >([]);
   const [annotationSet, setAnnotationSet] = useState<IAnnotationPage>();
 
-  const { manifestURL, callNumber, playerSize } = props;
+  const { manifestURL, callNumber, playerSize, controlBarLinks } = props;
 
   const setPlayerPosition = (seconds: number) => {
     __setPlayerPosition(seconds);
@@ -108,8 +109,8 @@ function AnnotationViewer(props: AnnotationViewerProps) {
         <div className={style.Gray}>
           <div className={style.ControlBarContainer}>
             <ControlBar
-              introductionURL=""
-              downloadTranscriptURL=""
+              // introductionURL=""
+              // downloadTranscriptURL=""
               videoPartList={getVideoParts(manifest as IManifest)}
               setVideoPart={setVideoPart}
               currentVideoPart={videoPart}
@@ -117,6 +118,7 @@ function AnnotationViewer(props: AnnotationViewerProps) {
               currentAnnotationSet={annotationSet}
               setAnnotationSet={setAnnotationSet}
               callNumber={callNumber}
+              links={controlBarLinks}
             />
           </div>
         </div>

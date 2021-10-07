@@ -3,6 +3,15 @@ import { IAnnotationPage, IVideoPart } from '../../api/iiifManifest';
 import styles from './ControlBar.module.css';
 import Dropdown from './Dropdown';
 
+export interface ControlBarLinkItem {
+  text: string;
+  href: string;
+}
+
+export interface ControlBarLinkProps {
+  linkItems: Array<ControlBarLinkItem>;
+}
+
 interface ControlBarProps {
   callNumber: string;
   // currentPartNumber: string;
@@ -10,8 +19,10 @@ interface ControlBarProps {
   setVideoPart: (part: IVideoPart) => void;
   currentVideoPart: IVideoPart;
 
-  downloadTranscriptURL: string;
-  introductionURL: string;
+  // downloadTranscriptURL: string;
+  // introductionURL: string;
+
+  links: Array<ControlBarLinkItem>;
 
   annotationSetList: Array<IAnnotationPage>;
   setAnnotationSet: (annotationSet: IAnnotationPage) => void;
@@ -24,11 +35,12 @@ function ControlBar(props: ControlBarProps) {
     currentVideoPart,
     callNumber: hvtID,
     videoPartList: partList,
-    downloadTranscriptURL,
-    introductionURL,
+    // downloadTranscriptURL,
+    // introductionURL,
     annotationSetList,
     setAnnotationSet,
     currentAnnotationSet,
+    links,
   } = props;
 
   return (
@@ -66,13 +78,11 @@ function ControlBar(props: ControlBarProps) {
           }}
         />
       </div>
-      <div>
-        {' '}
-        <a href={introductionURL}>Introduction</a>
-      </div>
-      <div>
-        <a href={downloadTranscriptURL}>Download Transcript</a>
-      </div>
+      {links.map(({ href, text }: ControlBarLinkItem) => (
+        <div key={`${text}-${href}`}>
+          <a href={href}>{text}</a>
+        </div>
+      ))}
     </div>
   );
 }

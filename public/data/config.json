@@ -1,37 +1,55 @@
 {
-    "filterCriticalEditions": false,
+    "onlyUseCriticalEditions": false,
+    "controlBarLinks": [
+        {
+            "label": "Download transcript",
+            "property": "transcriptURL"
+        },
+        {
+            "label": "Introduction",
+            "property": "introductionURL"
+        }
+    ],
     "videos": [
         {
             "slug": "hvt-2033",
-            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/vm42r3p97p/manifest"
+            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/vm42r3p97p/manifest",
+            "introductionURL": "https://editions.fortunoff.library.yale.edu/hvt-2033/"
         },
         {
             "slug": "hvt-0170",
-            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/tq5r785x0b/manifest"
+            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/tq5r785x0b/manifest",
+            "introductionURL": "https://editions.fortunoff.library.yale.edu/hvt-0170/"
         },
         {
             "slug": "hvt-3280",
-            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/028pc2t54f/manifest"
+            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/028pc2t54f/manifest",
+            "introductionURL": "https://editions.fortunoff.library.yale.edu/hvt-3280/"
         },
         {
             "slug": "hvt-3038",
-            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/p26pz51s4w/manifest"
+            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/p26pz51s4w/manifest",
+            "introductionURL": "https://editions.fortunoff.library.yale.edu/hvt-3038/"
         },
         {
             "slug": "hvt-0764",
-            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/cr5n87319n/manifest"
+            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/cr5n87319n/manifest",
+            "introductionURL": "https://editions.fortunoff.library.yale.edu/hvt-0764/"
         },
         {
             "slug": "hvt-0237",
-            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/tq5r785x4k/manifest"
+            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/tq5r785x4k/manifest",
+            "introductionURL": "https://editions.fortunoff.library.yale.edu/hvt-0237/"
         },
         {
             "slug": "hvt-3169",
-            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/jw86h4d01m/manifest"
+            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/jw86h4d01m/manifest",
+            "introductionURL": "https://editions.fortunoff.library.yale.edu/hvt-3169/"
         },
         {
             "slug": "hvt-3164",
-            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/5x2599z44f/manifest"
+            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/5x2599z44f/manifest",
+            "introductionURL": "https://editions.fortunoff.library.yale.edu/hvt-3164/"
         }
     ]
 }
