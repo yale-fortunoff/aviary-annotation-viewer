@@ -27,29 +27,33 @@ function AnnotationViewerFromSlug({ config }: AnnotationViewerFromSlugProps) {
   const { controlBarLinks } = config;
 
   return (
-    <AnnotationViewer
-      manifestURL={manifestURL}
-      callNumber={callNumber || slug}
-      controlBarLinks={(controlBarLinks || [])
-        .filter(({ property }: ControlBarLinkConfig) => property in videoConfig)
-        .map(({ property, label: text }: ControlBarLinkConfig) => {
-          const href = videoConfig[property];
-          if (href === undefined) {
-            // allowing console use for misconfigurations
-            // TODO - should abstract this so we can just
-            // make the no-console exception once
-            // eslint-disable-next-line no-console
-            console.warn(
-              `Property '${property}' not found in link config:`,
-              videoConfig
-            );
-          }
-          return {
-            href,
-            text,
-          };
-        })}
-    />
+    <div className="App">
+      <AnnotationViewer
+        manifestURL={manifestURL}
+        callNumber={callNumber || slug}
+        controlBarLinks={(controlBarLinks || [])
+          .filter(
+            ({ property }: ControlBarLinkConfig) => property in videoConfig
+          )
+          .map(({ property, label: text }: ControlBarLinkConfig) => {
+            const href = videoConfig[property];
+            if (href === undefined) {
+              // allowing console use for misconfigurations
+              // TODO - should abstract this so we can just
+              // make the no-console exception once
+              // eslint-disable-next-line no-console
+              console.warn(
+                `Property '${property}' not found in link config:`,
+                videoConfig
+              );
+            }
+            return {
+              href,
+              text,
+            };
+          })}
+      />
+    </div>
   );
 }
 

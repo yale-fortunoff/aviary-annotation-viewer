@@ -60,18 +60,59 @@
   /* padding: 0 80px; */
 }
 
-.Gray {
-  background-color: #efefef;
-}
-
-.ControlbarContainer {
+.ControlBarContainer {
+  flex: 1;
+  align-items: center;
+  padding: 3px 0px;
+  box-shadow: 0px 0px 10px #999;
   background-color: white;
 }
 
+.TitleBlock {
+  padding-top: 4px;
+  padding-left: 60px;
+  padding-right: 22px;
+
+  padding-bottom: 9px;
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .VideoTitle {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 18px;
+  font-family: 'Yale New', Georgia, 'Times New Roman', Times, serif;
+  font-weight: normal;
+  font-size: 20px;
+  line-height: 1em;
+  margin: 9px 0;
   /* background-color: white; */
-  margin: 14px;
-  margin-left: 60px;
+}
+
+.PreambleBlock {
+  /* display: flex;
+  flex-wrap: wrap;
+  flex-grow: 1;
+  width: 100%; */
+  background-color: #efefef;
+
+  align-items: center;
+}
+
+.LinkTray {
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+}
+
+.LinkTray > * {
+  margin-right: 16px;
+  /* background-color: white;
+  line-height: 2em; */
+}
+
+.CallNumber {
+  text-transform: uppercase;
+  font-weight: 600;
 }
