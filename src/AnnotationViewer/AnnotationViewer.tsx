@@ -74,13 +74,13 @@ function AnnotationViewer(props: AnnotationViewerProps) {
     setAnnotationSetList(getVideoPartAnnotations(videoPart));
   }, [videoPart]);
 
-  if (!videoPart) {
-    return <div>Loading video part</div>;
-  }
+  // if (!videoPart) {
+  //   return <div>Loading video part</div>;
+  // }
 
-  if (!annotationSet) {
-    return <div>Loading annotation sets...</div>;
-  }
+  // if (!annotationSet) {
+  //   return <div>Loading annotation sets...</div>;
+  // }
 
   return (
     <div className={style.AnnotationViewerContainer}>
@@ -93,7 +93,7 @@ function AnnotationViewer(props: AnnotationViewerProps) {
             setPlayerPosition={setPlayerPosition}
             sources={[
               {
-                src: getVideoPartURL(videoPart) || '',
+                src: videoPart ? getVideoPartURL(videoPart) : '',
                 type: 'video/mp4',
               },
             ]}

@@ -13,13 +13,21 @@ interface PlayerProps {
   setPlayerPosition: (seconds: number) => void;
   playerPosition: number;
 
-  videoPart: IVideoPart;
+  videoPart?: IVideoPart;
 }
+
+Player.defaultProps = {
+  videoPart: undefined,
+};
 
 export type PlayerSize = 'small' | 'medium' | 'large';
 
 function Player(props: PlayerProps) {
   const { videoPart, setPlayerPosition, playerPosition, sources } = props;
+
+  if (!videoPart) {
+    return <div>Loading Video Part</div>;
+  }
 
   return (
     <div className={styles.Player}>

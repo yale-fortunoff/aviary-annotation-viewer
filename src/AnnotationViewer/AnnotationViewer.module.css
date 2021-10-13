@@ -27,7 +27,7 @@
   flex-grow: 0;
   flex-shrink: 1;
   overflow: hidden;
-  background-color: blue;
+  background-color: black;
   color: white;
   transition: flex-basis 750ms ease-out;
 }

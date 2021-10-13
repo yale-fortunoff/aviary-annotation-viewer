@@ -62,7 +62,7 @@ function Captions(props: CaptionsProps) {
   }, [playerPosition, activeAnnotationIndex, synchronize]);
 
   if (!annotationSet) {
-    return <div>Something went wrong while loading captions data.</div>;
+    return <div>Loading annotation set</div>;
   }
 
   return (

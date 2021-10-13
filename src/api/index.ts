@@ -25,7 +25,7 @@ export function getVideoTitleFromManifest(
 }
 
 export function getVideoParts(manifest: IManifest): Array<IVideoPart> {
-  return manifest.items;
+  return manifest?.items || [];
 }
 
 export function getVideoPartTitle(

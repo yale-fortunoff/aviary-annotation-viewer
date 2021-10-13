@@ -16,17 +16,23 @@ interface ControlBarProps {
   // currentPartNumber: string;
   videoPartList: Array<IVideoPart>;
   setVideoPart: (part: IVideoPart) => void;
-  currentVideoPart: IVideoPart;
+  currentVideoPart?: IVideoPart;
 
   // downloadTranscriptURL: string;
   // introductionURL: string;
 
   links: Array<ControlBarLinkItem>;
 
-  annotationSetList: Array<IAnnotationPage>;
+  annotationSetList?: Array<IAnnotationPage>;
   setAnnotationSet: (annotationSet: IAnnotationPage) => void;
-  currentAnnotationSet: IAnnotationPage;
+  currentAnnotationSet?: IAnnotationPage;
 }
+
+ControlBar.defaultProps = {
+  annotationSetList: [],
+  currentVideoPart: undefined,
+  currentAnnotationSet: undefined,
+};
 
 function ControlBar(props: ControlBarProps) {
   const {
@@ -38,6 +44,10 @@ function ControlBar(props: ControlBarProps) {
     currentAnnotationSet,
     links,
   } = props;
+
+  if (!currentAnnotationSet || !annotationSetList || !currentVideoPart) {
+    return <div>Loading</div>;
+  }
 
   return (
     <div className={`${styles.ControlBar}`}>
