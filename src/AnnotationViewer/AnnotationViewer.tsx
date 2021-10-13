@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
+import { useParams } from 'react-router';
 import Captions from './Captions/Captions';
 import Player, { PlayerSize } from './Player/Player';
 import style from './AnnotationViewer.module.css';
@@ -14,7 +15,7 @@ import {
 import { IAnnotationPage, IManifest, IVideoPart } from '../api/iiifManifest';
 import ToggleButton from './ToggleButton/ToggleButton';
 
-interface AnnotationViewerProps {
+export interface AnnotationViewerProps {
   manifestURL: string;
   callNumber: string;
   playerSize?: PlayerSize;
@@ -26,8 +27,11 @@ AnnotationViewer.defaultProps = {
 };
 
 function AnnotationViewer(props: AnnotationViewerProps) {
+  const { seconds: initialSeconds } = useParams<{ seconds: string }>();
   // State that needs to be passed between child components
-  const [playerPosition, __setPlayerPosition] = useState<number>(0);
+  const [playerPosition, __setPlayerPosition] = useState<number>(
+    Number(initialSeconds) || 0
+  );
   const [syncAnnotationsToPlayer, setSyncAnnotationsToPlayer] =
     useState<boolean>(true);
   const [videoTitle, setVideoTitle] = useState<string>('');
@@ -99,8 +103,6 @@ function AnnotationViewer(props: AnnotationViewerProps) {
         <div className={style.PreambleBlock}>
           <div className={style.ControlBarContainer}>
             <ControlBar
-              // introductionURL=""
-              // downloadTranscriptURL=""
               videoPartList={getVideoParts(manifest as IManifest)}
               setVideoPart={setVideoPart}
               currentVideoPart={videoPart}

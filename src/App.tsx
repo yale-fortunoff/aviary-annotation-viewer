@@ -5,7 +5,7 @@ import {
   Route,
   useParams,
 } from 'react-router-dom';
-import AnnotationViewer from './AnnotationViewer/AnnotationViewer';
+import AnnotationViewer from './AnnotationViewer';
 import { getVideoConfigFromSlug } from './api';
 import IndexPage from './IndexPage';
 import { ControlBarLinkConfig, IConfig } from './api/interfaces';
@@ -73,7 +73,7 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route path="/av/:slug">
+        <Route path="/av/:slug/">
           <AnnotationViewerFromSlug config={config} />
         </Route>
         <Route path="/">
