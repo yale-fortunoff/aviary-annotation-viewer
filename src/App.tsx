@@ -6,7 +6,7 @@ import {
   useParams,
 } from 'react-router-dom';
 import AnnotationViewer from './AnnotationViewer';
-import { getVideoConfigFromSlug } from './api';
+import { getVideoConfigFromSlug } from './utils';
 import IndexPage from './IndexPage';
 import { ControlBarLinkConfig, IConfig } from './api/interfaces';
 

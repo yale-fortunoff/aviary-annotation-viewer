@@ -1,19 +1,15 @@
-import { getStartAndEndFromVTTItem, getVideoPartURL } from 'api';
+import { getVideoPartURL } from 'utils';
 import AnnotationViewerContext from 'context';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import styles from './Player.module.css';
 import Video from './Video';
 
 export type PlayerSize = 'small' | 'medium' | 'large';
 
 function Player() {
-  const { annotation, videoPart, playerPosition, setPlayerPosition } =
-    useContext(AnnotationViewerContext);
-  useEffect(() => {
-    if (!annotation) return;
-    const { start } = getStartAndEndFromVTTItem(annotation);
-    setPlayerPosition(start);
-  }, [annotation]);
+  const { videoPart, playerPosition, setPlayerPosition } = useContext(
+    AnnotationViewerContext
+  );
 
   if (!videoPart) {
     return <div>Loading Video Part</div>;

@@ -1,8 +1,9 @@
 import AnnotationViewerContext from 'context';
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import { getStartAndEndFromVTTItem } from 'utils';
 import getAnnotationIndexFromTime, {
   getAnnotationIndexFromAnnotation,
-} from 'utils/getAnnotation';
+} from 'utils/getAnnotationIndex';
 import { IAnnotationItem } from '../../api/iiifManifest';
 import styles from './Captions.module.css';
 
@@ -10,8 +11,14 @@ function Captions() {
   const [activeAnnotationIndex, setActiveAnnotationIndex] = useState<number>(0);
   const annotationContainerRef = useRef<HTMLOListElement>(null);
 
-  const { annotation, playerPosition, annotationSet, sync, setAnnotation } =
-    useContext(AnnotationViewerContext);
+  const {
+    annotation,
+    setPlayerPosition,
+    playerPosition,
+    setAnnotation,
+    annotationSet,
+    sync,
+  } = useContext(AnnotationViewerContext);
 
   useEffect(() => {
     if (!annotationSet) return;
@@ -20,6 +27,7 @@ function Captions() {
       playerPosition,
       annotationSet
     );
+
     setActiveAnnotationIndex(newAnnotationIndex);
   }, [playerPosition, annotationSet]);
 
@@ -27,15 +35,10 @@ function Captions() {
     if (sync && annotationContainerRef.current) {
       const { children } = annotationContainerRef.current;
       const child = children[activeAnnotationIndex];
-      child.scrollIntoView({
+      child?.scrollIntoView({
         block: 'start',
         behavior: 'smooth',
       });
-      if (!annotationSet) return;
-      setTimeout(
-        () => setAnnotation(annotationSet.items[activeAnnotationIndex]),
-        500
-      );
     }
   }, [activeAnnotationIndex, sync]);
 
@@ -69,6 +72,15 @@ function Captions() {
             captionContent = `XML annotations not supported. Array of length ${caption.body.length}`;
           }
 
+          // https:// stackoverflow.com/a/25279399
+          const timeString = (seconds: number) => {
+            const date = new Date(0);
+            date.setSeconds(seconds);
+            return date.toISOString().substr(11, 8);
+          };
+
+          const { start, end } = getStartAndEndFromVTTItem(caption);
+
           return (
             <li
               key={caption.id}
@@ -79,12 +91,25 @@ function Captions() {
               }`}
             >
               <div className={styles.CaptionLabel}>{idx + 1}</div>
-              <div
-                className={styles.CaptionText}
-                // It has to be done this way.
-                // eslint-disable-next-line react/no-danger
-                dangerouslySetInnerHTML={{ __html: captionContent }}
-              />
+              <div>
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPlayerPosition(Math.floor(start));
+                      setAnnotation(caption);
+                    }}
+                  >
+                    {timeString(start)} - {timeString(end)}
+                  </button>
+                </div>
+                <div
+                  className={styles.CaptionText}
+                  // It has to be done this way.
+                  // eslint-disable-next-line react/no-danger
+                  dangerouslySetInnerHTML={{ __html: captionContent }}
+                />
+              </div>
             </li>
           );
         })}

@@ -4,8 +4,8 @@ import {
   IVideoPart,
   IAnnotationPage,
   IAnnotationItem,
-} from './iiifManifest';
-import { IConfig, IVideoConfigEntry } from './interfaces';
+} from '../api/iiifManifest';
+import { IConfig, IVideoConfigEntry } from '../api/interfaces';
 
 export function getVideoConfigFromSlug(
   config: IConfig,

@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 import React, { useEffect, useRef } from 'react';
-import { getVideoPartVTTs, getVTTCueFromIVTTItem } from '../../api';
+import { getVideoPartVTTs, getVTTCueFromIVTTItem } from '../../utils';
 import {
   IVideoPart,
   IAnnotationItem,
@@ -80,8 +80,6 @@ function Video({
           const seconds = Math.round(
             videoElement.current ? videoElement.current.currentTime : 0
           );
-          if (seconds === playerPosition) return;
-
           setPlayerPosition(seconds);
         }}
         className={styles.Video}

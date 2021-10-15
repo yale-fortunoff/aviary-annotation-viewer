@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
-import insecureStringHash from 'utils/hash';
 import AnnotationViewerContext from 'context';
-import updateURL from 'utils/updateURL';
-import deserializeURL, { URLState } from 'utils/deserializeURL';
+import deserializeURL, {
+  stateToURL,
+  URLState,
+  validateState,
+} from 'utils/deserializeURL';
 import { PlayerSize } from './Player/Player';
 import { IControlBarLinkItem } from './ControlBar/ControlBar';
 import {
@@ -45,22 +47,33 @@ function AnnotationViewer(props: AnnotationViewerProps) {
   };
 
   useEffect(() => {
-    Promise.all([
-      insecureStringHash(videoPart?.id || ''),
-      insecureStringHash(annotationSet?.id || ''),
-      insecureStringHash(annotation?.id || ''),
-    ]).then((arr) => {
-      const [part, set, anno] = arr.map((item) => item.slice(0, 8));
+    if (!manifest || !videoPart || !annotationSet || !annotation) return;
 
-      // TODO - This is a bit hacky.
-      // 'e3b0c442' is the result of hashing the empty string
-      const EMPTY_STRING_HASH = 'e3b0c442';
-      const dropIfEmpty = (x: string) =>
-        x !== EMPTY_STRING_HASH ? x : undefined;
-      updateURL(history, {
-        part: dropIfEmpty(part),
-        set: dropIfEmpty(set),
-        anno: dropIfEmpty(anno),
+    validateState(
+      {
+        videoPart,
+        annotationSet,
+        annotation,
+      },
+      manifest
+    ).then((cleanState) => {
+      stateToURL(cleanState).then((components) => {
+        if (!manifest) return;
+        if (cleanState.videoPart !== videoPart) {
+          console.log('fixing video part');
+          setVideoPart(cleanState.videoPart);
+        }
+        if (cleanState.annotationSet !== annotationSet) {
+          console.log('fixing annotation set');
+          setAnnotationSet(cleanState.annotationSet);
+        }
+        if (cleanState.annotation !== annotation) {
+          console.log('fixing annotation', cleanState.annotation?.body);
+          setAnnotation(cleanState.annotation);
+        }
+
+        console.log('Not doing anything with components', components);
+        // updateURL(history, components, manifest);
       });
     });
   }, [videoPart, annotationSet, annotation]);
@@ -70,11 +83,16 @@ function AnnotationViewer(props: AnnotationViewerProps) {
       .then((response) => response.json())
       .then((manifestData: IManifest) => {
         setManifest(manifestData);
-        deserializeURL(history, manifestData).then((urlState: URLState) => {
-          setVideoPart(urlState.videoPart);
-          setAnnotationSet(urlState.annotationSet);
-          setAnnotation(urlState.annotation);
-        });
+        deserializeURL(history.location.search.toString(), manifestData).then(
+          (urlState: URLState) => {
+            setVideoPart(urlState.videoPart);
+            setAnnotationSet(urlState.annotationSet);
+            setAnnotation(urlState.annotation);
+
+            if (urlState.annotation)
+              console.log('initial annotation', urlState.annotation?.body);
+          }
+        );
       });
   }, [manifestURL]);
 

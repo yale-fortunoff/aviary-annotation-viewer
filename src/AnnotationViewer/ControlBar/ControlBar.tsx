@@ -1,4 +1,4 @@
-import { getVideoPartAnnotationSets, getVideoParts } from 'api';
+import { getVideoPartAnnotationSets, getVideoParts } from 'utils';
 import AnnotationViewerContext from 'context';
 import React, { useContext } from 'react';
 import styles from './ControlBar.module.css';
@@ -40,11 +40,8 @@ function ControlBar(props: ControlBarProps) {
             label: part.label.en || '',
           }))}
           changeFunc={(id: string) => {
-            const matches = partList.filter((part) => part.id === id);
-            if (matches.length < 1) {
-              return;
-            }
-            setVideoPart(matches[0]);
+            const newVideoPart = partList.find((part) => part.id === id);
+            if (newVideoPart) setVideoPart(newVideoPart);
           }}
         />
       ) : null}
@@ -58,11 +55,10 @@ function ControlBar(props: ControlBarProps) {
           })) || []
         }
         changeFunc={(id: string) => {
-          const matches = annotationSetList?.filter((fn) => fn.id === id) || [];
-          if (matches.length < 1) {
-            return;
-          }
-          setAnnotationSet(matches[0]);
+          if (!annotationSetList) return;
+          setAnnotationSet(
+            annotationSetList.find((fn) => fn.id === id) || annotationSetList[0]
+          );
         }}
       />
       {links.map(({ href, text }: IControlBarLinkItem) => (

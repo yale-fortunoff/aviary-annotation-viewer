@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { getVideoTitleFromManifest } from 'api';
+import { getVideoTitleFromManifest } from 'utils';
 import { v4 as uuid } from 'uuid';
 import AnnotationViewerContext from 'context';
 import style from './AnnotationViewer.module.css';
