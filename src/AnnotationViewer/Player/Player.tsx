@@ -1,33 +1,30 @@
-import React from 'react';
-import { IVideoPart } from '../../api/iiifManifest';
+import { getStartAndEndFromVTTItem, getVideoPartURL } from 'api';
+import AnnotationViewerContext from 'context';
+import React, { useContext, useEffect } from 'react';
 import styles from './Player.module.css';
 import Video from './Video';
 
-interface VideoSource {
-  src: string;
-  type: string;
-}
-
-interface PlayerProps {
-  sources: Array<VideoSource>;
-  setPlayerPosition: (seconds: number) => void;
-  playerPosition: number;
-
-  videoPart?: IVideoPart;
-}
-
-Player.defaultProps = {
-  videoPart: undefined,
-};
-
 export type PlayerSize = 'small' | 'medium' | 'large';
 
-function Player(props: PlayerProps) {
-  const { videoPart, setPlayerPosition, playerPosition, sources } = props;
+function Player() {
+  const { annotation, videoPart, playerPosition, setPlayerPosition } =
+    useContext(AnnotationViewerContext);
+  useEffect(() => {
+    if (!annotation) return;
+    const { start } = getStartAndEndFromVTTItem(annotation);
+    setPlayerPosition(start);
+  }, [annotation]);
 
   if (!videoPart) {
     return <div>Loading Video Part</div>;
   }
+
+  const sources = [
+    {
+      src: videoPart ? getVideoPartURL(videoPart) : '',
+      type: 'video/mp4',
+    },
+  ];
 
   return (
     <div className={styles.Player}>

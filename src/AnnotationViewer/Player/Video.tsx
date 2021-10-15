@@ -8,19 +8,12 @@ import {
 } from '../../api/iiifManifest';
 import styles from './Video.module.css';
 
-// interface Track {
-//   label?: string;
-//   languageCode: string;
-//   src: string;
-// }
-
 interface VideoSource {
   src: string;
   type: string;
 }
 
 interface VideoProps {
-  // tracks: Array<Track>;
   sources: Array<VideoSource>;
   setPlayerPosition: (seconds: number) => void;
   playerPosition: number;
@@ -28,11 +21,14 @@ interface VideoProps {
   videoPart: IVideoPart;
 }
 
-function Video(props: VideoProps) {
+function Video({
+  videoPart,
+  sources,
+  playerPosition,
+  setPlayerPosition,
+}: VideoProps) {
   const videoElement = useRef<HTMLVideoElement>(null);
   // const [currentText, setCurrentText] = useState<string>("");
-
-  const { videoPart, sources } = props;
 
   useEffect(() => {
     videoElement.current?.load();
@@ -69,50 +65,33 @@ function Video(props: VideoProps) {
   }, [videoElement, videoPart]);
 
   useEffect(() => {
-    const tracks = videoElement.current?.textTracks || [];
-    for (let i = 0; i < tracks.length; i += 1) {
-      // const track: TextTrack = tracks[i];
-      // track.oncuechange = handleCueChange;
-    }
-  }, [videoElement]);
+    if (!videoElement || !videoElement.current || !playerPosition) return;
+
+    videoElement.current.currentTime = playerPosition;
+  }, [videoElement, playerPosition]);
 
   return (
-    <>
-      <div className={styles.VideoContainer}>
-        <video
-          controlsList="nofullscreen"
-          disablePictureInPicture
-          ref={videoElement}
-          onTimeUpdate={() => {
-            const seconds = Math.round(
-              videoElement.current ? videoElement.current.currentTime : 0
-            );
-            if (seconds === props.playerPosition) {
-              return;
-            }
-            // console.log(`${seconds} seconds`);
-            props.setPlayerPosition(seconds);
-          }}
-          className={styles.Video}
-          controls
-        >
-          {sources.map((source: VideoSource) => (
-            <source key={source.src} src={source.src} type={source.type} />
-          ))}
-          {/* {props.tracks.map((track: Track) => (
-            <track
-              ref={trackElement}
-              label={track.label || track.languageCode}
-              kind="subtitles"
-              srcLang={track.languageCode}
-              src={track.src}
-              default
-            />
-          ))} */}
-        </video>
-        {/* <div className={styles.CaptionContainer}>{currentText}</div> */}
-      </div>
-    </>
+    <div className={styles.VideoContainer}>
+      <video
+        controlsList="nofullscreen"
+        disablePictureInPicture
+        ref={videoElement}
+        onTimeUpdate={() => {
+          const seconds = Math.round(
+            videoElement.current ? videoElement.current.currentTime : 0
+          );
+          if (seconds === playerPosition) return;
+
+          setPlayerPosition(seconds);
+        }}
+        className={styles.Video}
+        controls
+      >
+        {sources.map((source: VideoSource) => (
+          <source key={source.src} src={source.src} type={source.type} />
+        ))}
+      </video>
+    </div>
   );
 }
 

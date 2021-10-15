@@ -1,65 +1,55 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { getStartAndEndFromVTTItem } from '../../api';
-import {
-  IAnnotationPage,
-  // IVideoPart,
-  IAnnotationItem,
-} from '../../api/iiifManifest';
+import AnnotationViewerContext from 'context';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import getAnnotationIndexFromTime, {
+  getAnnotationIndexFromAnnotation,
+} from 'utils/getAnnotation';
+import { IAnnotationItem } from '../../api/iiifManifest';
 import styles from './Captions.module.css';
 
-interface CaptionsProps {
-  // path: string;
-  playerPosition: number;
-  synchronize: boolean;
-  // videoPart: IVideoPart;
-
-  annotationSet?: IAnnotationPage;
-}
-
-Captions.defaultProps = {
-  annotationSet: undefined,
-};
-
-function getAnnotationFromTime(seconds: number, captions: IAnnotationPage) {
-  let ret = 0;
-  for (let i = 0; i < captions.items.length; i += 1) {
-    const captionItem = captions.items[i];
-    const { start } = getStartAndEndFromVTTItem(captionItem);
-
-    if (start >= seconds) {
-      ret = i;
-      break;
-    }
-  }
-  return ret;
-}
-
-function Captions(props: CaptionsProps) {
+function Captions() {
   const [activeAnnotationIndex, setActiveAnnotationIndex] = useState<number>(0);
   const annotationContainerRef = useRef<HTMLOListElement>(null);
-  const { playerPosition, synchronize, annotationSet } = props;
+
+  const { annotation, playerPosition, annotationSet, sync, setAnnotation } =
+    useContext(AnnotationViewerContext);
 
   useEffect(() => {
-    if (!annotationSet) {
-      return;
-    }
-    const newAnnotationIndex = getAnnotationFromTime(
+    if (!annotationSet) return;
+
+    const newAnnotationIndex = getAnnotationIndexFromTime(
       playerPosition,
       annotationSet
     );
     setActiveAnnotationIndex(newAnnotationIndex);
-  }, [playerPosition, activeAnnotationIndex, annotationSet]);
+  }, [playerPosition, annotationSet]);
 
   useEffect(() => {
-    if (synchronize && annotationContainerRef.current) {
+    if (sync && annotationContainerRef.current) {
       const { children } = annotationContainerRef.current;
       const child = children[activeAnnotationIndex];
       child.scrollIntoView({
         block: 'start',
         behavior: 'smooth',
       });
+      if (!annotationSet) return;
+      setTimeout(
+        () => setAnnotation(annotationSet.items[activeAnnotationIndex]),
+        500
+      );
     }
-  }, [playerPosition, activeAnnotationIndex, synchronize]);
+  }, [activeAnnotationIndex, sync]);
+
+  useEffect(() => {
+    if (!annotation || !annotationSet) {
+      return;
+    }
+    const annotationIndex = getAnnotationIndexFromAnnotation(
+      annotation,
+      annotationSet
+    );
+
+    setActiveAnnotationIndex(annotationIndex);
+  }, [annotation]);
 
   if (!annotationSet) {
     return <div>Loading annotation set</div>;

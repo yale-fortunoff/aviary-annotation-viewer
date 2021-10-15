@@ -27,7 +27,7 @@ export default function Dropdown({
       <label htmlFor={selectID}>{labelText}</label>
       <select
         id={selectID}
-        defaultValue={currentItemID}
+        value={currentItemID}
         onChange={(evt) => {
           changeFunc(evt.target.value);
         }}
