@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
 import AnnotationViewerContext from 'context';
-import deserializeURL, {
-  stateToURL,
-  URLState,
+import {
+  searchStringToURLComponents,
+  stateToURLComponents,
+  URLComponentsToValidState,
+  AppState,
   validateState,
-} from 'utils/deserializeURL';
+} from 'utils/appState';
+import updateURL from 'utils/updateURL';
 import { PlayerSize } from './Player/Player';
 import { IControlBarLinkItem } from './ControlBar/ControlBar';
 import {
@@ -35,10 +38,37 @@ function AnnotationViewer(props: AnnotationViewerProps) {
   const [syncAnnotationsToPlayer, setSyncAnnotationsToPlayer] =
     useState<boolean>(true);
   const [manifest, setManifest] = useState<IManifest>();
-  const [videoPart, setVideoPart] = useState<IVideoPart>();
-  const [annotation, setAnnotation] = useState<IAnnotationItem>();
-  const [annotationSet, setAnnotationSet] = useState<IAnnotationPage>();
+  const [appState, _setAppState] = useState<AppState>({});
+
+  const { videoPart, annotationSet, annotation } = appState;
+
   const history = useHistory();
+
+  const setAppState = ({
+    videoPart: newVideoPart,
+    annotationSet: newAnnotationSet,
+    annotation: newAnnotation,
+  }: AppState) => {
+    if (!manifest) return;
+
+    _setAppState(
+      validateState(
+        {
+          videoPart: newVideoPart || videoPart,
+          annotationSet: newAnnotationSet || annotationSet,
+          annotation: newAnnotation || annotation,
+        },
+        manifest
+      )
+    );
+  };
+
+  const setAnnotation = (newAnnotation: IAnnotationItem) =>
+    setAppState({ annotation: newAnnotation });
+  const setAnnotationSet = (newAnnotationSet: IAnnotationPage) =>
+    setAppState({ annotationSet: newAnnotationSet });
+  const setVideoPart = (newVideoPart: IVideoPart) =>
+    setAppState({ videoPart: newVideoPart });
 
   const { manifestURL, callNumber, controlBarLinks } = props;
 
@@ -46,55 +76,35 @@ function AnnotationViewer(props: AnnotationViewerProps) {
     setSyncAnnotationsToPlayer(!syncAnnotationsToPlayer);
   };
 
+  // set the initial state when the manifest loads
   useEffect(() => {
-    if (!manifest || !videoPart || !annotationSet || !annotation) return;
+    if (!manifest) return;
 
-    validateState(
-      {
-        videoPart,
-        annotationSet,
-        annotation,
-      },
-      manifest
-    ).then((cleanState) => {
-      stateToURL(cleanState).then((components) => {
-        if (!manifest) return;
-        if (cleanState.videoPart !== videoPart) {
-          console.log('fixing video part');
-          setVideoPart(cleanState.videoPart);
-        }
-        if (cleanState.annotationSet !== annotationSet) {
-          console.log('fixing annotation set');
-          setAnnotationSet(cleanState.annotationSet);
-        }
-        if (cleanState.annotation !== annotation) {
-          console.log('fixing annotation', cleanState.annotation?.body);
-          setAnnotation(cleanState.annotation);
-        }
+    const searchString = history.location.search.toString();
+    const components = searchStringToURLComponents(searchString);
 
-        console.log('Not doing anything with components', components);
-        // updateURL(history, components, manifest);
-      });
+    URLComponentsToValidState(components, manifest).then((initialState) => {
+      setAppState(initialState);
     });
-  }, [videoPart, annotationSet, annotation]);
+  }, [manifest]);
 
+  // when the manifest URL is available, fetch it
   useEffect(() => {
     fetch(manifestURL)
       .then((response) => response.json())
       .then((manifestData: IManifest) => {
         setManifest(manifestData);
-        deserializeURL(history.location.search.toString(), manifestData).then(
-          (urlState: URLState) => {
-            setVideoPart(urlState.videoPart);
-            setAnnotationSet(urlState.annotationSet);
-            setAnnotation(urlState.annotation);
-
-            if (urlState.annotation)
-              console.log('initial annotation', urlState.annotation?.body);
-          }
-        );
       });
   }, [manifestURL]);
+
+  // when the app state is updated, update the URL to match
+  useEffect(() => {
+    if (!manifest) return;
+    if (!videoPart || !annotationSet || !annotation) return;
+    stateToURLComponents(appState).then((components) =>
+      updateURL(history, components, manifest)
+    );
+  }, [appState]);
 
   return (
     <AnnotationViewerContext.Provider

@@ -30,6 +30,7 @@ function Video({
   const videoElement = useRef<HTMLVideoElement>(null);
   // const [currentText, setCurrentText] = useState<string>("");
 
+  // reload video element when a different part is selected
   useEffect(() => {
     videoElement.current?.load();
   }, [videoElement, videoPart]);
