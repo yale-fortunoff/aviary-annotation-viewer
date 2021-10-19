@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router';
+import { useHistory } from 'react-router';
 import AnnotationViewerContext from 'context';
 import {
   searchStringToURLComponents,
@@ -9,6 +9,7 @@ import {
   validateState,
 } from 'utils/appState';
 import updateURL from 'utils/updateURL';
+import sortAnnotationSet from 'utils/sortAnnotationSet';
 import { PlayerSize } from './Player/Player';
 import { IControlBarLinkItem } from './ControlBar/ControlBar';
 import {
@@ -31,10 +32,6 @@ AnnotationViewer.defaultProps = {
 };
 
 function AnnotationViewer(props: AnnotationViewerProps) {
-  const { seconds: initialSeconds } = useParams<{ seconds: string }>();
-  const [playerPosition, setPlayerPosition] = useState<number>(
-    Number(initialSeconds) || 0
-  );
   const [syncAnnotationsToPlayer, setSyncAnnotationsToPlayer] =
     useState<boolean>(true);
   const [manifest, setManifest] = useState<IManifest>();
@@ -51,19 +48,26 @@ function AnnotationViewer(props: AnnotationViewerProps) {
   }: AppState) => {
     if (!manifest) return;
 
-    _setAppState(
-      validateState(
-        {
-          videoPart: newVideoPart || videoPart,
-          annotationSet: newAnnotationSet || annotationSet,
-          annotation: newAnnotation || annotation,
-        },
-        manifest
-      )
+    if (annotationSet) {
+      // TODO - Annotations don't currently come in from Aviary
+      // in the correct order, so we need to sort them by timestamp
+      // Eventually we will drop this.
+      sortAnnotationSet(annotationSet);
+    }
+
+    const newState = validateState(
+      {
+        videoPart: newVideoPart || videoPart,
+        annotationSet: newAnnotationSet || annotationSet,
+        annotation: newAnnotation,
+      },
+      manifest
     );
+
+    _setAppState(newState);
   };
 
-  const setAnnotation = (newAnnotation: IAnnotationItem) =>
+  const setAnnotation = (newAnnotation: IAnnotationItem | undefined) =>
     setAppState({ annotation: newAnnotation });
   const setAnnotationSet = (newAnnotationSet: IAnnotationPage) =>
     setAppState({ annotationSet: newAnnotationSet });
@@ -100,7 +104,7 @@ function AnnotationViewer(props: AnnotationViewerProps) {
   // when the app state is updated, update the URL to match
   useEffect(() => {
     if (!manifest) return;
-    if (!videoPart || !annotationSet || !annotation) return;
+    if (!videoPart || !annotationSet) return;
     stateToURLComponents(appState).then((components) =>
       updateURL(history, components, manifest)
     );
@@ -113,12 +117,12 @@ function AnnotationViewer(props: AnnotationViewerProps) {
         manifest,
         videoPart,
         annotationSet,
-        playerPosition,
+        // playerPosition,
         annotation,
         sync: syncAnnotationsToPlayer,
         setAnnotation,
         setAnnotationSet,
-        setPlayerPosition,
+        // setPlayerPosition,
         setVideoPart,
         toggleSync,
       }}

@@ -7,9 +7,7 @@ import Video from './Video';
 export type PlayerSize = 'small' | 'medium' | 'large';
 
 function Player() {
-  const { videoPart, playerPosition, setPlayerPosition } = useContext(
-    AnnotationViewerContext
-  );
+  const { videoPart } = useContext(AnnotationViewerContext);
 
   if (!videoPart) {
     return <div>Loading Video Part</div>;
@@ -26,8 +24,8 @@ function Player() {
     <div className={styles.Player}>
       <Video
         videoPart={videoPart}
-        setPlayerPosition={setPlayerPosition}
-        playerPosition={playerPosition}
+        // setPlayerPosition={setPlayerPosition}
+        // playerPosition={playerPosition}
         sources={sources}
       />
     </div>

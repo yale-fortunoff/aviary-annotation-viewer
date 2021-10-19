@@ -1,9 +1,7 @@
 import AnnotationViewerContext from 'context';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { getStartAndEndFromVTTItem } from 'utils';
-import getAnnotationIndexFromTime, {
-  getAnnotationIndexFromAnnotation,
-} from 'utils/getAnnotationIndex';
+import { getAnnotationIndexFromAnnotation } from 'utils/getAnnotationIndex';
 import { IAnnotationItem } from '../../api/iiifManifest';
 import styles from './Captions.module.css';
 
@@ -11,29 +9,14 @@ function Captions() {
   const [activeAnnotationIndex, setActiveAnnotationIndex] = useState<number>(0);
   const annotationContainerRef = useRef<HTMLOListElement>(null);
 
-  const {
-    annotation,
-    setPlayerPosition,
-    playerPosition,
-    setAnnotation,
-    annotationSet,
-    sync,
-  } = useContext(AnnotationViewerContext);
-
-  useEffect(() => {
-    if (!annotationSet) return;
-
-    const newAnnotationIndex = getAnnotationIndexFromTime(
-      playerPosition,
-      annotationSet
-    );
-
-    setActiveAnnotationIndex(newAnnotationIndex);
-  }, [playerPosition, annotationSet]);
+  const { annotation, setAnnotation, annotationSet, sync } = useContext(
+    AnnotationViewerContext
+  );
 
   useEffect(() => {
     if (sync && annotationContainerRef.current) {
       const { children } = annotationContainerRef.current;
+
       const child = children[activeAnnotationIndex];
       child?.scrollIntoView({
         block: 'start',
@@ -44,12 +27,19 @@ function Captions() {
 
   useEffect(() => {
     if (!annotation || !annotationSet) {
+      setActiveAnnotationIndex(0);
       return;
     }
+
     const annotationIndex = getAnnotationIndexFromAnnotation(
-      annotation,
-      annotationSet
+      annotationSet,
+      annotation
     );
+
+    if (annotationIndex < 0) {
+      setActiveAnnotationIndex(0);
+      return;
+    }
 
     setActiveAnnotationIndex(annotationIndex);
   }, [annotation]);
@@ -83,6 +73,8 @@ function Captions() {
 
           return (
             <li
+              data-start={start}
+              data-end={end}
               key={caption.id}
               className={`${styles.Caption} ${
                 isActiveAnnotation
@@ -96,7 +88,6 @@ function Captions() {
                   <button
                     type="button"
                     onClick={() => {
-                      setPlayerPosition(Math.floor(start));
                       setAnnotation(caption);
                     }}
                   >

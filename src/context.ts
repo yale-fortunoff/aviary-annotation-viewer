@@ -12,27 +12,27 @@ export interface IAnnotationViewerContext {
   videoPart?: IVideoPart;
   annotationSet?: IAnnotationPage;
   annotation?: IAnnotationItem;
-  playerPosition: number;
+  // playerPosition: number;
   playerSize: PlayerSize;
   sync: boolean;
 
   setAnnotationSet: (annotationSet: IAnnotationPage) => void;
   setVideoPart: (videoPart: IVideoPart) => void;
-  setAnnotation: (annotation: IAnnotationItem) => void;
-  setPlayerPosition: (seconds: number) => void;
+  setAnnotation: (annotation: IAnnotationItem | undefined) => void;
+  // setPlayerPosition: (seconds: number) => void;
   toggleSync: () => void;
 }
 
 const AnnotationViewerContext = createContext<IAnnotationViewerContext>({
   sync: true,
   playerSize: 'medium',
-  playerPosition: 0,
+  // playerPosition: 0,
 
   toggleSync: () => {},
   setAnnotation: () => {},
   setVideoPart: () => {},
   setAnnotationSet: () => {},
-  setPlayerPosition: () => {},
+  // setPlayerPosition: () => {},
 });
 
 export default AnnotationViewerContext;

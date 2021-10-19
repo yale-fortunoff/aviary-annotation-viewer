@@ -47,8 +47,8 @@ const defaultAnnotationSet = (videoPart: IVideoPart) => {
 };
 
 // get the default annotation (first one) from an annotation set
-const defaultAnnotation = (annotationSet: IAnnotationPage) =>
-  annotationSet.items[0];
+// const defaultAnnotation = (annotationSet: IAnnotationPage) =>
+//   annotationSet.items[0];
 
 // return a complete app state from a partial one, using
 // the manifest to fill in the blanks
@@ -56,7 +56,7 @@ function defaultState(manifest: IManifest, state: AppState): AppState {
   const retVideoPart = state.videoPart || defaultVideoPart(manifest);
   const retAnnotationSet =
     state.annotationSet || defaultAnnotationSet(retVideoPart);
-  const retAnnotation = state.annotation || defaultAnnotation(retAnnotationSet);
+  const retAnnotation = state.annotation; // || defaultAnnotation(retAnnotationSet);
 
   return {
     videoPart: retVideoPart,
