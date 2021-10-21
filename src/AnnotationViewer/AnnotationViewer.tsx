@@ -92,13 +92,17 @@ function AnnotationViewer(props: AnnotationViewerProps) {
     });
   }, [manifest]);
 
-  // when the manifest URL is available, fetch it
-  useEffect(() => {
+  const fetchManifest = () => {
     fetch(manifestURL)
       .then((response) => response.json())
       .then((manifestData: IManifest) => {
         setManifest(manifestData);
       });
+  };
+
+  // when the manifest URL is available, fetch it
+  useEffect(() => {
+    fetchManifest();
   }, [manifestURL]);
 
   // when the app state is updated, update the URL to match
@@ -113,6 +117,7 @@ function AnnotationViewer(props: AnnotationViewerProps) {
   return (
     <AnnotationViewerContext.Provider
       value={{
+        refetchData: fetchManifest,
         playerSize: 'medium',
         manifest,
         videoPart,

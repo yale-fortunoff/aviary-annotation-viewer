@@ -31,12 +31,30 @@ interface VideoProps {
 
 function Video({ videoPart, sources }: VideoProps) {
   const videoElement = useRef<HTMLVideoElement>(null);
+  const { refetchData } = useContext(AnnotationViewerContext);
   // const [currentText, setCurrentText] = useState<string>("");
   // const [playerPosition, setPlayerPosition] = useState<number>(0);
 
   // reload video element when a different part is selected
   useEffect(() => {
-    videoElement.current?.load();
+    if (!videoElement) return;
+    if (!videoElement.current) return;
+    videoElement.current.load();
+    videoElement.current.onerror = () => {
+      // the video element can error out if the hosted video link
+      // from the manifest expires, so we need to manually re-fetch in that case
+      setTimeout(() => {
+        // if there is a network error, that's probably because the URL
+        // expired, so we need to fetch a new manifest. it could be caused
+        // by other things, like the user's internet connection being dead
+        // but that's outside of our control:
+        // TODO - display a custom network error message rather than
+        // just relying on the browser's video element to display the error
+        if (videoElement.current?.error?.code === 2) {
+          refetchData();
+        }
+      }, 15000);
+    };
   }, [videoElement, videoPart]);
 
   const { annotationSet, annotation, setAnnotation } = useContext(

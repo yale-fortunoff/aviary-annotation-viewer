@@ -21,6 +21,7 @@ export interface IAnnotationViewerContext {
   setAnnotation: (annotation: IAnnotationItem | undefined) => void;
   // setPlayerPosition: (seconds: number) => void;
   toggleSync: () => void;
+  refetchData: () => void;
 }
 
 const AnnotationViewerContext = createContext<IAnnotationViewerContext>({
@@ -32,6 +33,7 @@ const AnnotationViewerContext = createContext<IAnnotationViewerContext>({
   setAnnotation: () => {},
   setVideoPart: () => {},
   setAnnotationSet: () => {},
+  refetchData: () => {},
   // setPlayerPosition: () => {},
 });
 
