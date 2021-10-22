@@ -35,7 +35,10 @@ function Video({ videoPart, sources }: VideoProps) {
   // const [currentText, setCurrentText] = useState<string>("");
   // const [playerPosition, setPlayerPosition] = useState<number>(0);
 
-  // reload video element when a different part is selected
+  const { annotationSet, annotation, setAnnotation } = useContext(
+    AnnotationViewerContext
+  );
+
   useEffect(() => {
     if (!videoElement) return;
     if (!videoElement.current) return;
@@ -55,16 +58,6 @@ function Video({ videoPart, sources }: VideoProps) {
         }
       }, 15000);
     };
-  }, [videoElement, videoPart]);
-
-  const { annotationSet, annotation, setAnnotation } = useContext(
-    AnnotationViewerContext
-  );
-
-  useEffect(() => {
-    if (!videoElement) {
-      return;
-    }
 
     const VTTs = getVideoPartVTTs(videoPart);
 
@@ -114,12 +107,6 @@ function Video({ videoPart, sources }: VideoProps) {
     // setPlayerPosition(newPlayerPosition);
   }, [annotation, annotationSet]);
 
-  // useEffect(() => {
-  //   if (!videoElement || !videoElement.current || !playerPosition) return;
-  //   console.log('Setting player position of video element', playerPosition);
-  //   videoElement.current.currentTime = playerPosition;
-  // }, [videoElement, playerPosition]);
-
   const jumpToPosition = (seconds: number) => {
     if (!videoElement || !videoElement.current) return;
     videoElement.current.currentTime = seconds;
@@ -139,6 +126,18 @@ function Video({ videoPart, sources }: VideoProps) {
             : 0;
 
           if (!annotationSet) return;
+
+          // determine if the current player position falls within the
+          // current timestamp. if so, don't update. this prevents an event
+          // where several annotations might have the same start time
+          // and clicking the annotation triggers the time to change, which
+          // triggers this handler function.
+          if (annotation) {
+            const { start, end } = getStartAndEndFromVTTItem(annotation);
+            if (seconds >= start && seconds <= end) {
+              return;
+            }
+          }
 
           const annotationIndex = getAnnotationIndexFromTime(
             annotationSet,
