@@ -93,6 +93,8 @@ function AnnotationViewer(props: AnnotationViewerProps) {
   }, [manifest]);
 
   const fetchManifest = () => {
+    // TODO - Prevent fetching manifest too frequently
+
     fetch(manifestURL)
       .then((response) => response.json())
       .then((manifestData: IManifest) => {

@@ -51,12 +51,12 @@ function Video({ videoPart, sources }: VideoProps) {
         // expired, so we need to fetch a new manifest. it could be caused
         // by other things, like the user's internet connection being dead
         // but that's outside of our control:
+
         // TODO - display a custom network error message rather than
         // just relying on the browser's video element to display the error
-        if (videoElement.current?.error?.code === 2) {
-          refetchData();
-        }
-      }, 15000);
+
+        refetchData();
+      }, 1000);
     };
 
     const VTTs = getVideoPartVTTs(videoPart);
