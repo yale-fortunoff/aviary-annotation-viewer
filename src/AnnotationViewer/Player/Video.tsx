@@ -1,6 +1,14 @@
 /* eslint-disable jsx-a11y/media-has-caption */
-import React, { useEffect, useRef } from 'react';
-import { getVideoPartVTTs, getVTTCueFromIVTTItem } from '../../api';
+import React, { useContext, useEffect, useRef } from 'react';
+import AnnotationViewerContext from 'context';
+import getAnnotationIndexFromTime, {
+  getAnnotationIndexFromAnnotation,
+} from 'utils/getAnnotationIndex';
+import {
+  getStartAndEndFromVTTItem,
+  getVideoPartVTTs,
+  getVTTCueFromIVTTItem,
+} from '../../utils';
 import {
   IVideoPart,
   IAnnotationItem,
@@ -8,35 +16,50 @@ import {
 } from '../../api/iiifManifest';
 import styles from './Video.module.css';
 
-// interface Track {
-//   label?: string;
-//   languageCode: string;
-//   src: string;
-// }
-
 interface VideoSource {
   src: string;
   type: string;
 }
 
 interface VideoProps {
-  // tracks: Array<Track>;
   sources: Array<VideoSource>;
-  setPlayerPosition: (seconds: number) => void;
-  playerPosition: number;
+  // setPlayerPosition: (seconds: number) => void;
+  // playerPosition: number;
 
   videoPart: IVideoPart;
 }
 
-function Video(props: VideoProps) {
+function Video({ videoPart, sources }: VideoProps) {
   const videoElement = useRef<HTMLVideoElement>(null);
+  const { refetchData } = useContext(AnnotationViewerContext);
   // const [currentText, setCurrentText] = useState<string>("");
+  // const [playerPosition, setPlayerPosition] = useState<number>(0);
 
-  const { videoPart, sources } = props;
-
+  // reload video element when a different part is selected
   useEffect(() => {
-    videoElement.current?.load();
+    if (!videoElement) return;
+    if (!videoElement.current) return;
+    videoElement.current.load();
+    videoElement.current.onerror = () => {
+      // the video element can error out if the hosted video link
+      // from the manifest expires, so we need to manually re-fetch in that case
+      setTimeout(() => {
+        // if there is a network error, that's probably because the URL
+        // expired, so we need to fetch a new manifest. it could be caused
+        // by other things, like the user's internet connection being dead
+        // but that's outside of our control:
+        // TODO - display a custom network error message rather than
+        // just relying on the browser's video element to display the error
+        if (videoElement.current?.error?.code === 2) {
+          refetchData();
+        }
+      }, 15000);
+    };
   }, [videoElement, videoPart]);
+
+  const { annotationSet, annotation, setAnnotation } = useContext(
+    AnnotationViewerContext
+  );
 
   useEffect(() => {
     if (!videoElement) {
@@ -69,50 +92,75 @@ function Video(props: VideoProps) {
   }, [videoElement, videoPart]);
 
   useEffect(() => {
-    const tracks = videoElement.current?.textTracks || [];
-    for (let i = 0; i < tracks.length; i += 1) {
-      // const track: TextTrack = tracks[i];
-      // track.oncuechange = handleCueChange;
+    if (!annotationSet || !annotation) return;
+
+    const { start: newPlayerPosition } = getStartAndEndFromVTTItem(annotation);
+
+    // don't jump the position unless we are no longer within the right footnote
+    const annotationIndex = getAnnotationIndexFromAnnotation(
+      annotationSet,
+      annotation
+    );
+
+    const timeBasedAnnotationIndex = getAnnotationIndexFromTime(
+      annotationSet,
+      videoElement?.current?.currentTime || 0
+    );
+
+    if (timeBasedAnnotationIndex !== annotationIndex) {
+      jumpToPosition(newPlayerPosition);
     }
-  }, [videoElement]);
+
+    // setPlayerPosition(newPlayerPosition);
+  }, [annotation, annotationSet]);
+
+  // useEffect(() => {
+  //   if (!videoElement || !videoElement.current || !playerPosition) return;
+  //   console.log('Setting player position of video element', playerPosition);
+  //   videoElement.current.currentTime = playerPosition;
+  // }, [videoElement, playerPosition]);
+
+  const jumpToPosition = (seconds: number) => {
+    if (!videoElement || !videoElement.current) return;
+    videoElement.current.currentTime = seconds;
+  };
 
   return (
-    <>
-      <div className={styles.VideoContainer}>
-        <video
-          controlsList="nofullscreen"
-          disablePictureInPicture
-          ref={videoElement}
-          onTimeUpdate={() => {
-            const seconds = Math.round(
-              videoElement.current ? videoElement.current.currentTime : 0
-            );
-            if (seconds === props.playerPosition) {
-              return;
-            }
-            // console.log(`${seconds} seconds`);
-            props.setPlayerPosition(seconds);
-          }}
-          className={styles.Video}
-          controls
-        >
-          {sources.map((source: VideoSource) => (
-            <source key={source.src} src={source.src} type={source.type} />
-          ))}
-          {/* {props.tracks.map((track: Track) => (
-            <track
-              ref={trackElement}
-              label={track.label || track.languageCode}
-              kind="subtitles"
-              srcLang={track.languageCode}
-              src={track.src}
-              default
-            />
-          ))} */}
-        </video>
-        {/* <div className={styles.CaptionContainer}>{currentText}</div> */}
-      </div>
-    </>
+    <div className={styles.VideoContainer}>
+      <video
+        controlsList="nofullscreen"
+        disablePictureInPicture
+        ref={videoElement}
+        onTimeUpdate={(evt) => {
+          evt.preventDefault();
+
+          const seconds = videoElement.current
+            ? videoElement.current.currentTime
+            : 0;
+
+          if (!annotationSet) return;
+
+          const annotationIndex = getAnnotationIndexFromTime(
+            annotationSet,
+            seconds
+            // playerPosition
+          );
+
+          if (annotationIndex < 0) {
+            setAnnotation(undefined);
+          } else {
+            const newAnnotation = annotationSet?.items[annotationIndex];
+            setAnnotation(newAnnotation);
+          }
+        }}
+        className={styles.Video}
+        controls
+      >
+        {sources.map((source: VideoSource) => (
+          <source key={source.src} src={source.src} type={source.type} />
+        ))}
+      </video>
+    </div>
   );
 }
 

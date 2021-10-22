@@ -1,68 +1,51 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { getStartAndEndFromVTTItem } from '../../api';
-import {
-  IAnnotationPage,
-  // IVideoPart,
-  IAnnotationItem,
-} from '../../api/iiifManifest';
+import AnnotationViewerContext from 'context';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { getStartAndEndFromVTTItem } from 'utils';
+import { getAnnotationIndexFromAnnotation } from 'utils/getAnnotationIndex';
+import { IAnnotationItem } from '../../api/iiifManifest';
 import styles from './Captions.module.css';
 
-interface CaptionsProps {
-  // path: string;
-  playerPosition: number;
-  synchronize: boolean;
-  // videoPart: IVideoPart;
-
-  annotationSet?: IAnnotationPage;
-}
-
-Captions.defaultProps = {
-  annotationSet: undefined,
-};
-
-function getAnnotationFromTime(seconds: number, captions: IAnnotationPage) {
-  let ret = 0;
-  for (let i = 0; i < captions.items.length; i += 1) {
-    const captionItem = captions.items[i];
-    const { start } = getStartAndEndFromVTTItem(captionItem);
-
-    if (start >= seconds) {
-      ret = i;
-      break;
-    }
-  }
-  return ret;
-}
-
-function Captions(props: CaptionsProps) {
+function Captions() {
   const [activeAnnotationIndex, setActiveAnnotationIndex] = useState<number>(0);
   const annotationContainerRef = useRef<HTMLOListElement>(null);
-  const { playerPosition, synchronize, annotationSet } = props;
+
+  const { annotation, setAnnotation, annotationSet, sync } = useContext(
+    AnnotationViewerContext
+  );
 
   useEffect(() => {
-    if (!annotationSet) {
-      return;
-    }
-    const newAnnotationIndex = getAnnotationFromTime(
-      playerPosition,
-      annotationSet
-    );
-    setActiveAnnotationIndex(newAnnotationIndex);
-  }, [playerPosition, activeAnnotationIndex, annotationSet]);
-
-  useEffect(() => {
-    if (synchronize && annotationContainerRef.current) {
+    if (sync && annotationContainerRef.current) {
       const { children } = annotationContainerRef.current;
+
       const child = children[activeAnnotationIndex];
-      child.scrollIntoView({
+      child?.scrollIntoView({
         block: 'start',
         behavior: 'smooth',
       });
     }
-  }, [playerPosition, activeAnnotationIndex, synchronize]);
+  }, [activeAnnotationIndex, sync]);
+
+  useEffect(() => {
+    if (!annotation || !annotationSet) {
+      setActiveAnnotationIndex(0);
+      return;
+    }
+
+    const annotationIndex = getAnnotationIndexFromAnnotation(
+      annotationSet,
+      annotation
+    );
+
+    if (annotationIndex < 0) {
+      setActiveAnnotationIndex(0);
+      return;
+    }
+
+    setActiveAnnotationIndex(annotationIndex);
+  }, [annotation]);
 
   if (!annotationSet) {
-    return <div>Something went wrong while loading captions data.</div>;
+    return <div>Loading annotation set</div>;
   }
 
   return (
@@ -79,8 +62,19 @@ function Captions(props: CaptionsProps) {
             captionContent = `XML annotations not supported. Array of length ${caption.body.length}`;
           }
 
+          // https:// stackoverflow.com/a/25279399
+          const timeString = (seconds: number) => {
+            const date = new Date(0);
+            date.setSeconds(seconds);
+            return date.toISOString().substr(11, 8);
+          };
+
+          const { start, end } = getStartAndEndFromVTTItem(caption);
+
           return (
             <li
+              data-start={start}
+              data-end={end}
               key={caption.id}
               className={`${styles.Caption} ${
                 isActiveAnnotation
@@ -89,12 +83,24 @@ function Captions(props: CaptionsProps) {
               }`}
             >
               <div className={styles.CaptionLabel}>{idx + 1}</div>
-              <div
-                className={styles.CaptionText}
-                // It has to be done this way.
-                // eslint-disable-next-line react/no-danger
-                dangerouslySetInnerHTML={{ __html: captionContent }}
-              />
+              <div>
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAnnotation(caption);
+                    }}
+                  >
+                    {timeString(start)} - {timeString(end)}
+                  </button>
+                </div>
+                <div
+                  className={styles.CaptionText}
+                  // It has to be done this way.
+                  // eslint-disable-next-line react/no-danger
+                  dangerouslySetInnerHTML={{ __html: captionContent }}
+                />
+              </div>
             </li>
           );
         })}

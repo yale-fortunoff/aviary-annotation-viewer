@@ -1,5 +1,5 @@
 {
-    "onlyUseCriticalEditions": false,
+    "onlyUseCriticalEditions": true,
     "controlBarLinks": [
         {
             "label": "Download transcript",
@@ -13,49 +13,49 @@
     "videos": [
         {
             "slug": "hvt-2033",
-            "manifestURL": "https://z3jrhq3kbe.execute-api.us-east-2.amazonaws.com/prod/vm42r3p97p",
+            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/vm42r3p97p/manifest",
             "introductionURL": "https://editions.fortunoff.library.yale.edu/essay/hvt-2033/",
             "transcriptURL": "https://d12q9fe14kxf9b.cloudfront.net/pdf/critical-edition-hvt-2033.pdf"
         },
         {
             "slug": "hvt-0170",
-            "manifestURL": "https://z3jrhq3kbe.execute-api.us-east-2.amazonaws.com/prod/tq5r785x0b",
+            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/tq5r785x0b/manifest",
             "introductionURL": "https://editions.fortunoff.library.yale.edu/essay/hvt-0170/",
             "transcriptURL": "https://d12q9fe14kxf9b.cloudfront.net/pdf/critical-edition-hvt-0170.pdf"
         },
         {
             "slug": "hvt-3280",
-            "manifestURL": "https://z3jrhq3kbe.execute-api.us-east-2.amazonaws.com/prod/028pc2t54f",
+            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/028pc2t54f/manifest",
             "introductionURL": "https://editions.fortunoff.library.yale.edu/essay/hvt-3280/",
             "transcriptURL": "https://d12q9fe14kxf9b.cloudfront.net/pdf/critical-edition-hvt-3280.pdf"
         },
         {
             "slug": "hvt-3038",
-            "manifestURL": "https://z3jrhq3kbe.execute-api.us-east-2.amazonaws.com/prod/p26pz51s4w",
+            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/p26pz51s4w/manifest",
             "introductionURL": "https://editions.fortunoff.library.yale.edu/essay/hvt-3038/",
             "transcriptURL": "https://d12q9fe14kxf9b.cloudfront.net/pdf/critical-edition-hvt-3038.pdf"
         },
         {
             "slug": "hvt-0764",
-            "manifestURL": "https://z3jrhq3kbe.execute-api.us-east-2.amazonaws.com/prod/cr5n87319n",
+            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/cr5n87319n/manifest",
             "introductionURL": "https://editions.fortunoff.library.yale.edu/essay/hvt-0764/",
             "transcriptURL": "https://d12q9fe14kxf9b.cloudfront.net/pdf/critical-edition-hvt-0764.pdf"
         },
         {
             "slug": "hvt-0237",
-            "manifestURL": "https://z3jrhq3kbe.execute-api.us-east-2.amazonaws.com/prod/tq5r785x4k",
+            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/tq5r785x4k/manifest",
             "introductionURL": "https://editions.fortunoff.library.yale.edu/essay/hvt-0237/",
             "transcriptURL": "https://d12q9fe14kxf9b.cloudfront.net/pdf/critical-edition-hvt-0237.pdf"
         },
         {
             "slug": "hvt-3169",
-            "manifestURL": "https://z3jrhq3kbe.execute-api.us-east-2.amazonaws.com/prod/jw86h4d01m",
+            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/jw86h4d01m/manifest",
             "introductionURL": "https://editions.fortunoff.library.yale.edu/essay/hvt-3169/",
             "transcriptURL": "https://d12q9fe14kxf9b.cloudfront.net/pdf/critical-edition-hvt-3169.pdf"
         },
         {
             "slug": "hvt-3164",
-            "manifestURL": "https://z3jrhq3kbe.execute-api.us-east-2.amazonaws.com/prod/5x2599z44f",
+            "manifestURL": "https://fortunoff.aviaryplatform.com/iiif/5x2599z44f/manifest",
             "introductionURL": "https://editions.fortunoff.library.yale.edu/essay/hvt-3164/"
         }
     ]

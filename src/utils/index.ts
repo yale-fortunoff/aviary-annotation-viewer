@@ -1,10 +1,11 @@
+import insecureStringHash from 'utils/hash';
 import {
   IManifest,
   IVideoPart,
   IAnnotationPage,
   IAnnotationItem,
-} from './iiifManifest';
-import { IConfig, IVideoConfigEntry } from './interfaces';
+} from '../api/iiifManifest';
+import { IConfig, IVideoConfigEntry } from '../api/interfaces';
 
 export function getVideoConfigFromSlug(
   config: IConfig,
@@ -25,7 +26,7 @@ export function getVideoTitleFromManifest(
 }
 
 export function getVideoParts(manifest: IManifest): Array<IVideoPart> {
-  return manifest.items;
+  return manifest?.items || [];
 }
 
 export function getVideoPartTitle(
@@ -41,7 +42,7 @@ export function getVideoPartURL(videoPart: IVideoPart): string {
 
 // TODO - Support XML. For now, drop support for it because it includes
 // array-type annotation item bodies. Not sure the best way to handle these yet
-export const getVideoPartAnnotations = (videoPart: IVideoPart) =>
+export const getVideoPartAnnotationSets = (videoPart: IVideoPart) =>
   videoPart.annotations.filter(
     (annotation) => !annotation.label.en[0].endsWith('.xml')
   );
@@ -50,7 +51,7 @@ function getVideoPartAnnotationPageByLabel(
   videoPart: IVideoPart,
   matchFunc: (label: string) => boolean
 ): Array<IAnnotationPage> {
-  return getVideoPartAnnotations(videoPart).filter((annotation) =>
+  return getVideoPartAnnotationSets(videoPart).filter((annotation) =>
     matchFunc(annotation.label.en[0])
   );
   // TODO - Support XML. For now, just hide it
@@ -92,4 +93,20 @@ export function getVTTCueFromIVTTItem(vttItem: IAnnotationItem): VTTCue {
     return new VTTCue(start, end, vttItem.body.value);
   }
   return new VTTCue(start, end, '');
+}
+
+export async function getItemByHash(
+  hash: string,
+  items: Array<{ id: string }>
+): Promise<any | undefined> {
+  const hashPromises = Promise.all(
+    items.map((item) => insecureStringHash(item.id))
+  );
+  return hashPromises.then((hashes) => {
+    for (let i = 0; i < hashes.length; i += 1) {
+      const itemHash = hashes[i];
+      if (itemHash.startsWith(hash)) return items[i];
+    }
+    return undefined;
+  });
 }

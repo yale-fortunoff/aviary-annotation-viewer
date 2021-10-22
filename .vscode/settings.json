@@ -8,6 +8,10 @@
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
   "javascript.format.enable": false,
   "typescript.format.enable": false
 }
