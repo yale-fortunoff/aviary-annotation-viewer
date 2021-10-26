@@ -44,7 +44,7 @@ export function getVideoPartURL(videoPart: IVideoPart): string {
 // array-type annotation item bodies. Not sure the best way to handle these yet
 export const getVideoPartAnnotationSets = (videoPart: IVideoPart) =>
   videoPart.annotations.filter(
-    (annotation) => !annotation.label.en[0].endsWith('.xml')
+    (annotation) => annotation.label && !annotation.label.en[0].endsWith('.xml')
   );
 
 function getVideoPartAnnotationPageByLabel(
