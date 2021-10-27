@@ -22,6 +22,11 @@ export default function Dropdown({
 }: DropdownProps) {
   const [selectID] = useState<string>(`dropddown-select-${uuid()}`);
 
+  // if there's only one item, don't render anything
+  if (items.length < 2) {
+    return <></>;
+  }
+
   return (
     <div className={style.Dropdown}>
       <label htmlFor={selectID}>{labelText}</label>
