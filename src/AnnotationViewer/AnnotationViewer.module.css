@@ -69,10 +69,12 @@
 }
 
 .TitleBlock {
-  padding-top: 7px;
+  /* width: 100%; */
+
+  /* padding-top: 7px;
   padding-bottom: 7px;
   padding-left: 60px;
-  padding-right: 22px;
+  padding-right: 22px; */
 
   display: flex;
   flex-wrap: wrap;
@@ -96,22 +98,65 @@
   width: 100%; */
   background-color: #efefef;
 
+  padding: 0px 60px;
+
   align-items: center;
 }
 
 .LinkTray {
-  font-size: 13px;
-  font-weight: 500;
   display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
 }
 
 .LinkTray > * {
-  margin-right: 16px;
-  /* background-color: white;
-  line-height: 2em; */
+  margin: 0px 6px;
+  /* flex: 1; */
+  /* overflow-x: hidden; */
 }
 
 .CallNumber {
   text-transform: uppercase;
   font-weight: 600;
+}
+
+.SubtitleBlock {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+@media screen and (max-width: 400px) {
+  .PreambleBlock {
+    padding: 0 10px;
+  }
+}
+
+@media screen and (min-width: 400px) and (max-width: 800px) {
+  .PreambleBlock {
+    padding: 0 30px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .VideoTitle {
+    font-size: 18px;
+  }
+}
+
+.LeftSide {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1;
+
+  color: #666;
+}
+
+.RightSide {
+  flex: 1;
+  flex-wrap: wrap;
 }

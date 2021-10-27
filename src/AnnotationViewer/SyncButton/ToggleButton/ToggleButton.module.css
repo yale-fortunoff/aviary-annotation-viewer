@@ -1,13 +1,13 @@
 .ToggleButton {
   border: none;
-  border-radius: 5px;
+  border-radius: 7px;
   font-weight: 600;
-  padding: 10px 10px;
+  padding: 2px 10px;
   box-shadow: 0px 0px 10px #999;
   cursor: pointer;
   color: #555;
 
-  min-height: 40px;
+  /* min-height: 26px; */
   transition: background-color 0.3s ease-in;
 }
 

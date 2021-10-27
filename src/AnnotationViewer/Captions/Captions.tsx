@@ -50,6 +50,7 @@ function Captions() {
 
   return (
     <div className={styles.CaptionsContainer}>
+      <h2 className={styles.Title}>{annotationSet.label.en[0]}</h2>
       <ol className={styles.CaptionColumn} ref={annotationContainerRef}>
         {annotationSet.items.map((caption: IAnnotationItem, idx) => {
           const isActiveAnnotation = activeAnnotationIndex === idx;

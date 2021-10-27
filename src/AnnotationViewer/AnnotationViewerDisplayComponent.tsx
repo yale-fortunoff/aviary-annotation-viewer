@@ -4,10 +4,11 @@ import { v4 as uuid } from 'uuid';
 import AnnotationViewerContext from 'context';
 import style from './AnnotationViewer.module.css';
 import Captions from './Captions';
-import ControlBar from './ControlBar';
 import { IControlBarLinkItem } from './ControlBar/ControlBar';
 import Player from './Player/Player';
 import SyncButton from './SyncButton/SyncButton';
+import PartListDropdown from './ControlBar/PartListDropdown';
+import AnnotationSetDropdown from './ControlBar/AnnotationSetDropdown';
 
 interface AnnotationViewerDisplayComponentProps {
   callNumber: string;
@@ -29,24 +30,27 @@ export default function AnnotationViewerDisplayComponent({
           <Player />
         </div>
         <div className={style.PreambleBlock}>
-          <div className={style.ControlBarContainer}>
-            <ControlBar links={[]} />
-          </div>
           <div className={`${style.TitleBlock}`}>
+            <h1 className={style.VideoTitle}>
+              {manifest ? getVideoTitleFromManifest(manifest) : '...'}
+            </h1>
+          </div>
+          <div className={style.SubtitleBlock}>
             <div className={style.LeftSide}>
-              <h1 className={style.VideoTitle}>
-                {manifest ? getVideoTitleFromManifest(manifest) : '...'}
-              </h1>
+              <div className={style.CallNumber}>{callNumber}</div>
+              <PartListDropdown />
+              <AnnotationSetDropdown />
+            </div>
+            <div className={style.RightSide}>
               <div className={style.LinkTray}>
-                <div className={style.CallNumber}>{callNumber}</div>
                 {controlBarLinks.map((link) => (
                   <a key={`link-tray-link-${uuid()}`} href={link.href}>
                     {link.text}
                   </a>
                 ))}
+                <SyncButton />
               </div>
             </div>
-            <SyncButton />
           </div>
         </div>
 

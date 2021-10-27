@@ -24,11 +24,12 @@ function AnnotationViewerFromSlug({ config }: AnnotationViewerFromSlugProps) {
 
   const { callNumber, manifestURL } = videoConfig;
 
-  const { controlBarLinks } = config;
+  const { controlBarLinks, ignoreVideoPartLabels } = config;
 
   return (
     <div className="App">
       <AnnotationViewer
+        ignoreVideoPartLabels={ignoreVideoPartLabels || false}
         manifestURL={manifestURL}
         callNumber={callNumber || slug}
         controlBarLinks={(controlBarLinks || [])

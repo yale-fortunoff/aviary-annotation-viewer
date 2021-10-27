@@ -25,6 +25,7 @@ export interface AnnotationViewerProps {
   callNumber: string;
   playerSize?: PlayerSize;
   controlBarLinks: Array<IControlBarLinkItem>;
+  ignoreVideoPartLabels: boolean;
 }
 
 AnnotationViewer.defaultProps = {
@@ -74,7 +75,8 @@ function AnnotationViewer(props: AnnotationViewerProps) {
   const setVideoPart = (newVideoPart: IVideoPart) =>
     setAppState({ videoPart: newVideoPart });
 
-  const { manifestURL, callNumber, controlBarLinks } = props;
+  const { manifestURL, callNumber, controlBarLinks, ignoreVideoPartLabels } =
+    props;
 
   const toggleSync = () => {
     setSyncAnnotationsToPlayer(!syncAnnotationsToPlayer);
@@ -132,6 +134,8 @@ function AnnotationViewer(props: AnnotationViewerProps) {
         // setPlayerPosition,
         setVideoPart,
         toggleSync,
+
+        ignoreVideoPartLabels,
       }}
     >
       <AnnotationViewerDisplayComponent

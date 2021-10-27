@@ -7,10 +7,6 @@ export default function SyncButton() {
   const { sync, toggleSync } = useContext(AnnotationViewerContext);
 
   return (
-    <ToggleButton
-      labelText={sync ? 'Unsynch' : 'Synch'}
-      active={sync}
-      toggleFunc={toggleSync}
-    />
+    <ToggleButton labelText="Sync" active={sync} toggleFunc={toggleSync} />
   );
 }

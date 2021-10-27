@@ -13,5 +13,6 @@ export interface ControlBarLinkConfig {
 export interface IConfig {
   videos: Array<IVideoConfigEntry>;
   onlyUseCriticalEditions?: boolean;
+  ignoreVideoPartLabels?: boolean;
   controlBarLinks?: Array<ControlBarLinkConfig>;
 }

@@ -22,6 +22,8 @@ export interface IAnnotationViewerContext {
   // setPlayerPosition: (seconds: number) => void;
   toggleSync: () => void;
   refetchData: () => void;
+
+  ignoreVideoPartLabels: boolean;
 }
 
 const AnnotationViewerContext = createContext<IAnnotationViewerContext>({
@@ -35,6 +37,8 @@ const AnnotationViewerContext = createContext<IAnnotationViewerContext>({
   setAnnotationSet: () => {},
   refetchData: () => {},
   // setPlayerPosition: () => {},
+
+  ignoreVideoPartLabels: false,
 });
 
 export default AnnotationViewerContext;
