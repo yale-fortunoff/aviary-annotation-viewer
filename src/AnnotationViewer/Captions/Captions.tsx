@@ -83,18 +83,22 @@ function Captions() {
                   : styles.InactiveAnnotation
               }`}
             >
-              <div className={styles.CaptionLabel}>{idx + 1}</div>
-              <div>
-                <div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setAnnotation(caption);
-                    }}
-                  >
-                    {timeString(start)} - {timeString(end)}
-                  </button>
-                </div>
+              <div className={styles.Left}>
+                <button
+                  className={styles.TimestampButton}
+                  type="button"
+                  onClick={() => {
+                    setAnnotation(caption);
+                  }}
+                >
+                  {timeString(start)} - {timeString(end)}
+                </button>
+              </div>
+              <div className={styles.Left}>
+                <div className={styles.CaptionLabel}>{idx + 1}</div>
+              </div>
+
+              <div className={styles.Right}>
                 <div
                   className={styles.CaptionText}
                   // It has to be done this way.
