@@ -153,10 +153,10 @@
 
 .LeftSide {
   display: flex;
-  flex-wrap: wrap;
   flex: 1;
 
   color: #666;
+  margin-bottom: 6px;
 }
 
 .RightSide {

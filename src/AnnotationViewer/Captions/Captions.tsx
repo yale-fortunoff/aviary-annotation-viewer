@@ -93,8 +93,6 @@ function Captions() {
                 >
                   {timeString(start)} - {timeString(end)}
                 </button>
-              </div>
-              <div className={styles.Left}>
                 <div className={styles.CaptionLabel}>{idx + 1}</div>
               </div>
 

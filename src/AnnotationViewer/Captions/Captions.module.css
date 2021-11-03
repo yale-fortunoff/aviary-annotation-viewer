@@ -31,6 +31,9 @@
   flex-shrink: 0;
   margin-right: 4px;
   padding-bottom: 7px;
+
+  display: flex;
+  align-items: flex-start;
 }
 
 .Right {
@@ -41,6 +44,7 @@
 
 .CaptionLabel {
   margin-right: 1em;
+  margin-left: 1em;
   font-weight: 600;
   font-size: 11px;
 }
