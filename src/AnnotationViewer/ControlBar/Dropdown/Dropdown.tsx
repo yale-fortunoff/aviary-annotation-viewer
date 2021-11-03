@@ -9,10 +9,14 @@ interface DropdownItem {
 
 interface DropdownProps {
   items: Array<DropdownItem>;
-  labelText: string;
+  labelText?: string;
   currentItemID: string;
   changeFunc: (id: string) => void;
 }
+
+Dropdown.defaultProps = {
+  labelText: undefined,
+};
 
 export default function Dropdown({
   currentItemID,
@@ -22,9 +26,14 @@ export default function Dropdown({
 }: DropdownProps) {
   const [selectID] = useState<string>(`dropddown-select-${uuid()}`);
 
+  // if there's only one item, don't render anything
+  if (items.length < 2) {
+    return <></>;
+  }
+
   return (
     <div className={style.Dropdown}>
-      <label htmlFor={selectID}>{labelText}</label>
+      {labelText ? <label htmlFor={selectID}>{labelText}</label> : null}
       <select
         id={selectID}
         value={currentItemID}

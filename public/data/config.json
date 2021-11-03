@@ -1,13 +1,14 @@
 {
     "onlyUseCriticalEditions": true,
+    "ignoreVideoPartLabels": true,
     "controlBarLinks": [
         {
-            "label": "Download transcript",
-            "property": "transcriptURL"
+            "label": "Foreward",
+            "property": "introductionURL"
         },
         {
-            "label": "Introduction",
-            "property": "introductionURL"
+            "label": "Transcript",
+            "property": "transcriptURL"
         }
     ],
     "videos": [

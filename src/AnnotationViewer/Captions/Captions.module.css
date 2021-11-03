@@ -1,6 +1,8 @@
 .CaptionsContainer {
   height: 100%;
   position: relative;
+  padding-top: 14px;
+  overflow-x: hidden;
 }
 
 .Caption {
@@ -8,7 +10,7 @@
   margin-bottom: 22px;
   display: flex;
 
-  padding: 14px;
+  padding: 14px 0px;
   border-radius: 2px;
 }
 
@@ -17,15 +19,34 @@
 }
 
 .CaptionColumn {
-  max-width: 600px;
+  max-width: 1200px;
+  width: 80%;
   margin-right: auto;
   margin-left: auto;
-  padding-top: 60px;
+  padding-left: 0;
+}
+
+.Left {
+  /* flex-basis: 1; */
+  flex-shrink: 0;
+  margin-right: 4px;
+  padding-bottom: 7px;
+
+  display: flex;
+  align-items: flex-start;
+}
+
+.Right {
+  /* flex-basis: 3;
+  flex-shrink: 1; */
+  flex-grow: 1;
 }
 
 .CaptionLabel {
   margin-right: 1em;
+  margin-left: 1em;
   font-weight: 600;
+  font-size: 11px;
 }
 
 .Active {
@@ -56,6 +77,26 @@
     display: flex;
     justify-content: center;
   }
+
+  .Caption {
+    flex-wrap: wrap;
+  }
+}
+
+.TimestampButton {
+  font-size: 11px;
+  appearance: none;
+  border: none;
+  color: #666;
+  background-color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0px;
+  margin: 0px;
+}
+
+.TimestampButton:hover {
+  color: #222;
 }
 
 .SynchButton {
@@ -73,4 +114,11 @@
 .SynchButton:hover {
   cursor: pointer;
   background-color: rgb(230, 108, 61);
+}
+
+.Title {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: normal;
+  font-size: 18px;
+  text-align: center;
 }
